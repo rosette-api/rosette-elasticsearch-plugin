@@ -1,0 +1,2 @@
+Rosette Plugin for ElasticSearch
+================================

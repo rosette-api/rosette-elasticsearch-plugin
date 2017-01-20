@@ -1,0 +1,7 @@
+FROM elasticsearch:{elasticsearch.version}-alpine
+
+RUN mkdir /plugins
+COPY plugins/*.zip /plugins/
+
+# any *.zip file in /plugins will be installed
+RUN find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;

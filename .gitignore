@@ -1,0 +1,16 @@
+*~
+**/.DS_Store
+**/.idea/*
+*.iml
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+classpath
+.checkstyle
+.ruleset
+.pmd
+.project
+.settings
+build.log

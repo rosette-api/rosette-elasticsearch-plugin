@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<assembly>
+    <id>plugin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <files>
+        <file>
+            <source>${project.basedir}/src/main/resources/plugin-descriptor.properties</source>
+            <outputDirectory>elasticsearch</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>${project.basedir}/src/main/resources/plugin-security.policy</source>
+            <outputDirectory>elasticsearch</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+    </files>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>elasticsearch</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+            <excludes>
+                <!-- prevent elastic jar hell since it has it too -->
+                <exclude>com.fasterxml.jackson.core:jackson-core</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+</assembly>
