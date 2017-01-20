@@ -33,7 +33,7 @@ curl -XPUT 'localhost:9200/test_idx/rosette/2?pretty&refresh=true' -d'
 }
 '
 
-curl -XPUT 'localhost:9200/test_idx/rosette/2?pretty&refresh=true' -d'
+curl -XPUT 'localhost:9200/test_idx/rosette/3?pretty&refresh=true' -d'
 {
   "content": "No one desires evil"
 }
