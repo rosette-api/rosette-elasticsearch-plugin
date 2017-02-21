@@ -146,7 +146,7 @@ public class DemoIngestCLI {
 
             RosetteResult rosetteResult = processDocument(json.get("text").asText());
 
-            indexDocument(file.getFileName().toString(), rosetteResult, json.findValue("$date").asText());
+            indexDocument(file.getFileName().toString(), rosetteResult, json.findValue("title").asText(), json.findValue("url").asText(), json.findValue("$date").asText());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -223,12 +223,14 @@ public class DemoIngestCLI {
     }
 
     //Index the enriched document in Elasticsearch. The filename is used as the doc id
-    IndexResponse indexDocument(String filename, RosetteResult rosetteResult, String date) throws IOException {
+    IndexResponse indexDocument(String filename, RosetteResult rosetteResult, String title, String url, String date) throws IOException {
         //Build the ES doc
         XContentBuilder builder = XContentFactory.jsonBuilder().startObject();
 
         rosetteResult.toXContent(builder);
 
+        builder.field("title", title);
+        builder.field("url", url);
         builder.field("date", date);
 
         //Send it

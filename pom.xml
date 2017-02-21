@@ -19,8 +19,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rosette.elasticsearch</groupId>
-    <artifactId>rosette-elasticsearch-plugin</artifactId>
+    <artifactId>rosette-elasticsearch-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version><!-- match ElasticSearch version?? -->
+    <packaging>pom</packaging>
     <parent>
         <artifactId>open-source-parent</artifactId>
         <groupId>com.basistech</groupId>
@@ -33,7 +34,7 @@
         <connection>scm:git:git@github.com:rosette-api/${project.artifactId}.git</connection>
         <developerConnection>scm:git:git@github.com:rosette-api/${project.artifactId}.git</developerConnection>
     </scm>
-    <description>ElasticSearch analysis plugin powered by Rosette API</description>
+    <description>ElasticSearch plugin parent</description>
     <distributionManagement>
         <site>
             <id>site</id>
@@ -47,74 +48,52 @@
         <bnd-maven-plugin.version>3.2.0</bnd-maven-plugin.version>
         <bt.compile.source>${jdk.version}</bt.compile.source>
         <bt.compile.target>${jdk.version}</bt.compile.target>
+        <log4j.version>2.7</log4j.version>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>com.basistech.rosette</groupId>
-            <artifactId>rosette-api</artifactId>
-            <version>${rosette.api.binding.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>${elasticsearch.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.test</groupId>
-            <artifactId>framework</artifactId>
-            <version>${elasticsearch.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>4.1.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>plugin</module>
+        <module>demoingest</module>
+    </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.basistech.rosette</groupId>
+                <artifactId>rosette-api</artifactId>
+                <version>${rosette.api.binding.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.test</groupId>
+                <artifactId>framework</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <!-- Have to make sure that our test dependency versions match up
+                 exactly to what Elastic is using (in this version) so that we
+                 don't receive security exceptions. -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.11</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>*.properties</exclude>
-                </excludes>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>elasticsearch.version</include>
-                </includes>
-            </testResource>
-        </testResources>
+        <defaultGoal>install</defaultGoal>
         <plugins>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <finalName>${artifactId}-${version}-ES-${elasticsearch.version}</finalName>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -127,38 +106,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.basistech</groupId>
-                <artifactId>bbh-maven-plugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <id>osgi-version</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>osgi-version</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <outputDirectory>${project.build.directory}/releases/</outputDirectory>
-                    <descriptors>
-                        <descriptor>${basedir}/src/main/assemblies/plugin.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <executions>
@@ -192,80 +139,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.12</version>
-                <executions>
-                    <execution>
-                        <id>parse-version</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>parse-version</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>set-dep-properties</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>properties</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.carrotsearch.randomizedtesting</groupId>
-                <artifactId>junit4-maven-plugin</artifactId>
-                <version>2.3.3</version>
-                <configuration>
-                    <argLine>-Dtests.security.manager=false</argLine>
-                    <assertions enableSystemAssertions="false">
-                        <enable/>
-                    </assertions>
-                    <listeners>
-                        <report-text />
-                    </listeners>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>unit-tests</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>junit4</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>biz.aQute.bnd</groupId>
-                    <artifactId>bnd-maven-plugin</artifactId>
-                    <version>${bnd-maven-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>bnd-process</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
     <reporting>
         <plugins>

@@ -12,7 +12,7 @@ node {
             withMaven(maven: "Basis", mavenLocalRepo: "$JENKINS_HOME/.m2/repository") {
                 sh "mvn clean install"
             }
-            archiveArtifacts artifacts: "target/releases/*.zip", fingerprint: true
+            archiveArtifacts artifacts: "plugin/target/releases/*.zip", fingerprint: true
         }
         slack(true)
     } catch (e) {

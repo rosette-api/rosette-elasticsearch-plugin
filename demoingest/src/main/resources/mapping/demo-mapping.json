@@ -16,6 +16,8 @@
           "offsets" : { "type" : "object" }
         }
       },
+      "title" : { "type" :  "text" },
+      "url" : { "type" :  "keyword" },
       "date" : { "type" : "date" }
     }
   }

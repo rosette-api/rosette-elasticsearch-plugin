@@ -1,41 +1,46 @@
 #!/usr/bin/env bash
 
+curl -XPUT 'localhost:9200/_ingest/pipeline/rosapi?pretty' -d'
+{
+  "processors": [
+    {
+      "ros_language" : {
+        "field" : "text",
+        "target_field" : "language"
+      }
+    }
+  ]
+}
+'
+
 curl -XPUT 'localhost:9200/test_idx?pretty' -d'
 {
   "mappings": {
     "rosette": {
       "properties": {
-        "content": {
-          "type": "text",
-          "fields": {
-            "iso639": {
-              "type": "iso639",
-              "store": true,
-              "index" : "not_analyzed"
-            }
-          }
-        }
+        "text" : { "type" : "text" },
+        "language" : { "type" : "keyword" }
       }
     }
   }
 }
 '
 
-curl -XPUT 'localhost:9200/test_idx/rosette/1?pretty&refresh=true' -d'
+curl -XPUT 'localhost:9200/test_idx/rosette/1?pretty&refresh=true&pipeline=rosapi' -d'
 {
-  "content": "I know that I know nothing"
+  "text": "I know that I know nothing"
 }
 '
 
-curl -XPUT 'localhost:9200/test_idx/rosette/2?pretty&refresh=true' -d'
+curl -XPUT 'localhost:9200/test_idx/rosette/2?pretty&refresh=true&pipeline=rosapi' -d'
 {
-  "content": "ξέρω ότι δεν ξέρω τίποτα"
+  "text": "ξέρω ότι δεν ξέρω τίποτα"
 }
 '
 
-curl -XPUT 'localhost:9200/test_idx/rosette/3?pretty&refresh=true' -d'
+curl -XPUT 'localhost:9200/test_idx/rosette/3?pretty&refresh=true&pipeline=rosapi' -d'
 {
-  "content": "No one desires evil"
+  "text": "No one desires evil"
 }
 '
 
@@ -68,12 +73,10 @@ sleep 3
 
 curl -XPOST 'localhost:9200/test_idx/_search?pretty' -d'
 {
-  "_source": true,
-  "stored_fields": "*",
   "query": {
     "constant_score" : {
       "filter" : {
-        "exists" : {"field" : "content.iso639"}
+        "exists" : {"field" : "language"}
       }
     }
   }

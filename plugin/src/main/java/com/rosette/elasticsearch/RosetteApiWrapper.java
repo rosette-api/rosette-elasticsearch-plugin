@@ -15,33 +15,43 @@
 */
 package com.rosette.elasticsearch;
 
+import org.apache.logging.log4j.Logger;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.Strings;
 
 import com.basistech.rosette.api.HttpRosetteAPI;
+import org.elasticsearch.common.logging.ESLoggerFactory;
 
 public final class RosetteApiWrapper {
 
-    private static RosetteApiWrapper instance;
-
+    private static final Logger LOGGER = ESLoggerFactory.getLogger(RosetteApiWrapper.class.getName());
+    
     // TODO: revisit this when we use embedded client
     private HttpRosetteAPI httpRosetteAPI;
 
-    private RosetteApiWrapper() {
-        HttpRosetteAPI.Builder clientBuilder = new HttpRosetteAPI.Builder();
-        String apiKey = System.getenv("ROSETTE_API_KEY");
-        String altUrl = System.getenv("ROSETTE_API_URL");
-        clientBuilder.key(apiKey);
+    RosetteApiWrapper() {
+        this(null, null);
+    }
+
+    RosetteApiWrapper(String apiKey, String altUrl) {
+        if (Strings.isNullOrEmpty(apiKey)) {
+            apiKey = System.getenv("ROSETTE_API_KEY");
+            if (Strings.isNullOrEmpty(apiKey)) {
+                throw new ElasticsearchException("Rosette plugin requires setting an API Key either via the '" + RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey() + "' setting, or the 'ROSETTE_API_KEY' environment variable.");
+            }
+        }
+
         if (Strings.isNullOrEmpty(altUrl)) {
+            altUrl = System.getenv("ROSETTE_API_URL");
+        }
+
+        HttpRosetteAPI.Builder clientBuilder = new HttpRosetteAPI.Builder();
+        clientBuilder.key(apiKey);
+        if (!Strings.isNullOrEmpty(altUrl)) {
+            LOGGER.info("Using alternative URL for Rosette API at : " + altUrl);
             clientBuilder.url(altUrl);
         }
         httpRosetteAPI = clientBuilder.build();
-    }
-
-    public static RosetteApiWrapper getInstance() {
-        if (instance == null) {
-            instance = new RosetteApiWrapper();
-        }
-        return instance;
     }
 
     public HttpRosetteAPI getHttpRosetteAPI() {
