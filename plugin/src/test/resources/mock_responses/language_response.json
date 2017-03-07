@@ -1,0 +1,24 @@
+{
+  "languageDetections": [
+    {
+      "language": "eng",
+      "confidence": 0.5936566252009456
+    },
+    {
+      "language": "por",
+      "confidence": 0.07179441867600847
+    },
+    {
+      "language": "ita",
+      "confidence": 0.05314874058696064
+    },
+    {
+      "language": "fra",
+      "confidence": 0.04732445026624705
+    },
+    {
+      "language": "spa",
+      "confidence": 0.04249449401047532
+    }
+  ]
+}

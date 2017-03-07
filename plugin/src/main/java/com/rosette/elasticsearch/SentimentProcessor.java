@@ -18,10 +18,11 @@ package com.rosette.elasticsearch;
 import com.basistech.rosette.api.HttpRosetteAPI;
 import com.basistech.rosette.api.HttpRosetteAPIException;
 import com.basistech.rosette.apimodel.DocumentRequest;
-import com.basistech.rosette.apimodel.LanguageOptions;
-import com.basistech.rosette.apimodel.LanguageResponse;
+import com.basistech.rosette.apimodel.SentimentOptions;
+import com.basistech.rosette.apimodel.SentimentResponse;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
@@ -31,38 +32,36 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Map;
 
-public class LanguageProcessor extends RosetteAbstractProcessor {
+public class SentimentProcessor extends RosetteAbstractProcessor {
 
-    public static final String TYPE = "ros_language";
+    public static final String TYPE = "ros_sentiment";
 
-    private static final Logger LOGGER = ESLoggerFactory.getLogger(LanguageProcessor.class.getName());
+    private static final Logger LOGGER = ESLoggerFactory.getLogger(SentimentProcessor.class.getName());
 
-    LanguageProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField) {
+    SentimentProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField) {
         super(rosAPI, tag, TYPE, inputField, targetField);
     }
 
     @Override
     public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
-        // call /language endpoint and set the result in the field
-        DocumentRequest<LanguageOptions> request = new DocumentRequest.Builder<LanguageOptions>().content(inputText).build();
-        LanguageResponse response;
+        // call /sentiment endpoint and set the top result in the field
+        DocumentRequest<SentimentOptions> request = new DocumentRequest.Builder<SentimentOptions>().content(inputText).build();
+        SentimentResponse response;
         try {
             // RosApi client binding's Jackson needs elevated privilege
-            response = AccessController.doPrivileged((PrivilegedAction<LanguageResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.LANGUAGE_SERVICE_PATH, request, LanguageResponse.class)
+            response = AccessController.doPrivileged((PrivilegedAction<SentimentResponse>) () ->
+                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.SENTIMENT_SERVICE_PATH, request, SentimentResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {
             LOGGER.error(ex.getErrorResponse().getMessage());
             throw new ElasticsearchException(ex.getErrorResponse().getMessage(), ex);
         }
 
-        if (response.getLanguageDetections() != null
-                && !response.getLanguageDetections().isEmpty()
-                && response.getLanguageDetections().get(0) != null
-                && response.getLanguageDetections().get(0).getLanguage() != null) {
-            ingestDocument.setFieldValue(targetField, response.getLanguageDetections().get(0).getLanguage().ISO639_3());
+        if (response.getDocument() != null
+                && !Strings.isNullOrEmpty(response.getDocument().getLabel())) {
+            ingestDocument.setFieldValue(targetField, response.getDocument().getLabel());
         } else {
-            throw new ElasticsearchException(TYPE + " ingest processor failed to guess language of document.");
+            throw new ElasticsearchException(TYPE + " ingest processor failed to determine sentiment of document.");
         }
     }
 
@@ -77,12 +76,12 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
         public Processor create(Map<String, Processor.Factory> registry, String processorTag, Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
             String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
-            return new LanguageProcessor(rosAPI, processorTag, inputField, targetField);
+            return new SentimentProcessor(rosAPI, processorTag, inputField, targetField);
         }
     }
 
     enum Parameters {
-        TARGET_FIELD("target_field", "ros_language");
+        TARGET_FIELD("target_field", "ros_sentiment");
 
         String name;
         String defaultValue;

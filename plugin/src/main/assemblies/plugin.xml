@@ -21,10 +21,15 @@
         <dependencySet>
             <outputDirectory>elasticsearch</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
-            <useTransitiveFiltering>true</useTransitiveFiltering>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
             <excludes>
-                <!-- prevent elastic jar hell since it has it too -->
+                <!-- These jars all are shaded -->
                 <exclude>com.fasterxml.jackson.core:jackson-core</exclude>
+                <exclude>com.basistech:adm-json</exclude>
+                <exclude>com.basistech.rosette:rosette-api</exclude>
+                <exclude>com.basistech.rosette:rosette-api-json</exclude>
+                <exclude>com.basistech:common-api-jackson</exclude>
+                <exclude>com.fasterxml.jackson.core:*</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>

@@ -31,8 +31,15 @@ import org.elasticsearch.test.ESIntegTestCase;
 import org.elasticsearch.test.hamcrest.ElasticsearchAssertions;
 import org.hamcrest.Matchers;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
 
@@ -40,7 +47,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
     protected Settings nodeSettings(int nodeOrdinal) {
         return Settings.builder()
                 .put(super.nodeSettings(nodeOrdinal))
-                //.put(RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey(), System.getProperty("rosette.api.key"))
+                .put(RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey(), System.getProperty("rosette.api.key", ""))
                 .build();
     }
 
@@ -68,19 +75,123 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
 
         String inputText = "This is a very English document. It should be identified as English.";
 
-        //Add an ingest pipeline that includes the language processor
-        WritePipelineResponse pipelineResponse = client().admin().cluster().preparePutPipeline("language", new BytesArray("{ \"processors\" : [ { \"" + LanguageProcessor.TYPE + "\" : { \"field\": \"text\" } } ] }")).get();
+        SearchResponse response = exercisePipeline(inputText, "language");
+
+        //Check the source for the expected language
+        assertThat(response.getHits().getAt(0).getSource().get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
+    }
+
+    public void testCategories() throws Exception {
+
+        String inputText = "The people played lots of sports like soccer and hockey. The score was very high. Touchdown!";
+
+        SearchResponse response = exercisePipeline(inputText, "categories");
+
+        //Check the source for the expected category
+        assertThat(response.getHits().getAt(0).getSource().get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("SPORTS"));
+    }
+
+    public void testSentiment() throws Exception {
+
+        String inputText = "I love this sentence so much I want to marry it!";
+
+        SearchResponse response = exercisePipeline(inputText, "sentiment");
+
+        //Check the source for the expected sentiment
+        assertThat(response.getHits().getAt(0).getSource().get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
+    }
+
+    public void testTranslateToEnglish() throws Exception {
+
+        String inputText = "Владимир Путин";
+
+        SearchResponse response = exercisePipeline(inputText, "translate_eng");
+
+        //Check the source for the expected English translation
+        assertThat(response.getHits().getAt(0).getSource().get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("Vladimir Putin"));
+    }
+
+    public void testTranslateFromEnglish() throws Exception {
+        String inputText = "Vladimir Putin";
+
+        SearchResponse response = exercisePipeline(inputText, "translate_rus");
+
+        //Check the source for the expected Russian translation
+        assertThat(response.getHits().getAt(0).getSource().get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("Владимир Путин"));
+    }
+
+    public void testEntities() throws Exception {
+
+        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent women in comedy.”";
+
+        SearchResponse response = exercisePipeline(inputText, "entities");
+
+        //Check the source for the expected entity result
+        assertFalse(((List)response.getHits().getAt(0).getSource().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
+        Map entity = (Map)((List)response.getHits().getAt(0).getSource().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
+        assertThat(entity.get("mention"), Matchers.equalTo("Dan Aykroyd"));
+    }
+
+    public void testEntitiesWithSentiment() throws Exception {
+
+        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent women in comedy.”";
+
+        SearchResponse response = exercisePipeline(inputText, "entities_sentiment");
+
+        //Check the source for the expected entity level sentiment
+        assertFalse(((List)response.getHits().getAt(0).getSource().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
+        Map entity = (Map)((List)response.getHits().getAt(0).getSource().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
+        assertThat(entity.get("mention"), Matchers.equalTo("Dan Aykroyd"));
+        assertThat(entity.get("sentiment"), Matchers.equalTo("pos"));
+    }
+
+    //Test that all (or most) of the processors work together
+    public void testAll() throws Exception {
+
+        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent women in comedy.”";
+
+        SearchResponse response = exercisePipeline(inputText, "all");
+
+        //Check the source for the expected entity result
+        Map<String, Object> source = response.getHits().getAt(0).getSource();
+        assertThat(source.get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
+        assertThat(source.get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("ARTS_AND_ENTERTAINMENT"));
+        assertThat(source.get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
+
+        assertFalse(((List)source.get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
+        Map entity = (Map)((List)source.get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
+        assertThat(entity.get("mention"), Matchers.equalTo("Dan Aykroyd"));
+    }
+
+    private SearchResponse exercisePipeline(String inputText, String pipelineName) throws IOException {
+
+        //Add the ingest pipeline
+        WritePipelineResponse pipelineResponse = client().admin().cluster().preparePutPipeline(pipelineName, getProcessorConfig(pipelineName)).get();
         assertTrue("Failed to add ingest pipeline", pipelineResponse.isAcknowledged());
 
         //Add a document that uses the ingest pipeline
-        IndexResponse indexResponse = client().prepareIndex("test", "test").setPipeline("language").setSource(XContentFactory.jsonBuilder().startObject().field("text", inputText).endObject()).get();
+        IndexResponse indexResponse = client().prepareIndex("test", "test").setPipeline(pipelineName).setSource(XContentFactory.jsonBuilder().startObject().field("text", inputText).endObject()).get();
         assertTrue("Failed to index document correctly", indexResponse.status().equals(RestStatus.CREATED));
         //Force index refresh
         refresh("test");
 
-        //Find the document and check its source for the expected language identification
+        //Find the document
         SearchResponse response = client().prepareSearch("test").setQuery(QueryBuilders.matchAllQuery()).get();
         ElasticsearchAssertions.assertNoFailures(response);
-        assertThat(response.getHits().getAt(0).getSource().get("ros_language"), Matchers.equalTo("eng"));
+
+        return response;
+    }
+
+    private BytesArray getProcessorConfig(String name) throws IOException {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("it_processors/" + name + ".json")) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8.name()))) {
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+            }
+            return new BytesArray(sb.toString());
+        }
     }
 }

@@ -1,0 +1,21 @@
+{ "processors" :
+  [
+    {
+      "ros_categories" : { "field": "text" }
+    },
+    {
+      "ros_language" : { "field": "text" }
+    },
+    {
+      "ros_sentiment" : { "field": "text" }
+    },
+    {
+      "ros_entities": {
+        "field": "text",
+        "include_offsets": false,
+        "include_translation": false,
+        "include_sentiment": false
+      }
+    }
+  ]
+}
