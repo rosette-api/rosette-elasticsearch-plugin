@@ -46,7 +46,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.19.1</version>
                 <configuration>
-                    <!--<showLogs>true</showLogs>-->
+                    <showLogs>true</showLogs>
                     <verbose>true</verbose>
                     <images>
                         <image>
