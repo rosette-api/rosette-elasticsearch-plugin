@@ -1,0 +1,1 @@
+{ "processors" : [ { "ros_name_translation" : { "field": "text" } } ] }

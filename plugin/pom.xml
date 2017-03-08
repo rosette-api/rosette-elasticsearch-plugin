@@ -39,6 +39,10 @@
             <url>scm:git:git@github.com:rosette-api/${project.artifactId}.git</url>
         </site>
     </distributionManagement>
+    <properties>
+        <mockserver.version>3.9.1</mockserver.version>
+        <mockserver.baseurl>/rest/worker/v1/</mockserver.baseurl>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.basistech.rosette</groupId>
@@ -94,6 +98,18 @@
             <artifactId>log4j-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty</artifactId>
+            <version>${mockserver.version}</version>
+            <exclusions>
+              <exclusion>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+              </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <defaultGoal>install</defaultGoal>
@@ -110,9 +126,6 @@
             <testResource>
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
-                <includes>
-                    <include>elasticsearch.version</include>
-                </includes>
             </testResource>
         </testResources>
         <plugins>
@@ -129,6 +142,78 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.12</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>reserve-mockserver-port</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>mockserver.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>set-dep-properties</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--Shading and relocating jackson so that the plugin can use the jackson-core jar with elevated priviliges-->
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-shade-plugin</artifactId>
+              <executions>
+                <execution>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>shade</goal>
+                  </goals>
+                  <configuration>
+                    <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+                    <createSourcesJar>true</createSourcesJar>
+                    <artifactSet>
+                    <!-- have to include all dependencies that use jackson due to relocation -->
+                      <includes>
+                        <include>com.basistech:adm-json</include>
+                        <include>com.basistech.rosette:rosette-api</include>
+                        <include>com.basistech.rosette:rosette-api-json</include>
+                        <include>com.basistech:common-api-jackson</include>
+                        <include>com.fasterxml.jackson.core:*</include>
+                      </includes>
+                    </artifactSet>
+                    <relocations>
+                      <relocation>
+                        <pattern>com.fasterxml</pattern>
+                        <shadedPattern>com.basistech.shaded.com.fasterxml</shadedPattern>
+                      </relocation>
+                    </relocations>
+                  </configuration>
+                </execution>
+              </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -151,31 +236,39 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.12</version>
+                <groupId>org.mock-server</groupId>
+                <artifactId>mockserver-maven-plugin</artifactId>
+                <version>${mockserver.version}</version>
+                <configuration>
+                    <serverPort>${mockserver.port}</serverPort>
+                    <logLevel>INFO</logLevel>
+                    <initializationClass>com.rosette.elasticsearch.MockRosetteInitialization</initializationClass>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>parse-version</id>
-                        <phase>generate-resources</phase>
+                        <id>process-test-classes</id>
+                        <phase>process-test-classes</phase>
                         <goals>
-                            <goal>parse-version</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>prepare-package</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>stop</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>set-dep-properties</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>properties</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <environmentVariables>
+                        <ROSETTE_API_URL>http://localhost:${mockserver.port}${mockserver.baseurl}</ROSETTE_API_URL>
+                    </environmentVariables>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -186,6 +279,15 @@
                       <goal>integration-test</goal>
                       <goal>verify</goal>
                     </goals>
+                    <configuration>
+                    <!-- Have to exclude the shaded jars to prevent jar hell during IT tests -->
+                      <classpathDependencyExcludes>
+                          <exclude>com.basistech:adm-json</exclude>
+                          <exclude>com.basistech.rosette:rosette-api</exclude>
+                          <exclude>com.basistech.rosette:rosette-api-json</exclude>
+                          <exclude>com.basistech:common-api-jackson</exclude>
+                      </classpathDependencyExcludes>
+                    </configuration>
                   </execution>
                 </executions>
             </plugin>

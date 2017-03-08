@@ -1,0 +1,1 @@
+{ "processors" : [ { "ros_entities" : { "field": "text", "include_offsets": true, "include_translation": true, "include_sentiment": false } } ] }

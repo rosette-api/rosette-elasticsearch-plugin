@@ -16,7 +16,7 @@
 package com.rosette.elasticsearch;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +45,12 @@ public class RosetteTextAnalysisPlugin extends Plugin implements MapperPlugin, I
         //As this method is called at Node startup, this should ensure only one instance of the api client
         RosetteApiWrapper rosAPI = new RosetteApiWrapper(key, altURL);
 
-        return Collections.singletonMap(LanguageProcessor.TYPE, new LanguageProcessor.Factory(rosAPI));
+        Map<String, Processor.Factory> processors = new HashMap<>();
+        processors.put(LanguageProcessor.TYPE, new LanguageProcessor.Factory(rosAPI));
+        processors.put(CategoriesProcessor.TYPE, new CategoriesProcessor.Factory(rosAPI));
+        processors.put(SentimentProcessor.TYPE, new SentimentProcessor.Factory(rosAPI));
+        processors.put(NameTranslationProcessor.TYPE, new NameTranslationProcessor.Factory(rosAPI));
+        processors.put(EntitiesProcessor.TYPE, new EntitiesProcessor.Factory(rosAPI));
+        return processors;
     }
 }

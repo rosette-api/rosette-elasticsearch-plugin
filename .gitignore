@@ -14,3 +14,4 @@ classpath
 .project
 .settings
 build.log
+dependency-reduced-pom.xml
