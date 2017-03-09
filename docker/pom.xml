@@ -122,7 +122,7 @@
                     </goals>
                     <phase>integration-test</phase>
                     <configuration>
-                      <executable>test.sh</executable>
+                      <executable>./test.sh</executable>
                       <arguments>
                           <argument>${docker.port}</argument>
                       </arguments>
@@ -136,7 +136,7 @@
                     </goals>
                     <phase>verify</phase>
                     <configuration>
-                      <executable>verify.sh</executable>
+                      <executable>./verify.sh</executable>
                       <arguments>
                           <argument>${curl.output}</argument>
                       </arguments>
