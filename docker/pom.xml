@@ -37,6 +37,8 @@
     </dependencies>
     <properties>
         <curl.output>${project.build.directory}/curl-output.txt</curl.output>
+        <elastic.host>${host.ip}</elastic.host>
+        <elastic.port>9200</elastic.port>
     </properties>
     <build>
         <defaultGoal>verify</defaultGoal>
@@ -76,7 +78,7 @@
                                 <wait>
                                     <log>Elasticsearch launched</log>
                                     <http>
-                                        <url>http://localhost:${docker.port}</url>
+                                        <url>http://${elastic.host}:${elastic.port}</url>
                                         <method>GET</method>
                                         <status>200..399</status>
                                     </http>
@@ -146,4 +148,19 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>platform-mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <!-- Mac has no docker0 bridge, port mapping is needed -->
+                <elastic.port>${docker.port}</elastic.port>
+                <elastic.host>localhost</elastic.host>
+            </properties>
+        </profile>
+    </profiles>
 </project>
