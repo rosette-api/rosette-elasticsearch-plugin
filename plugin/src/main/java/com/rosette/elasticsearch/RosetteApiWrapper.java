@@ -15,6 +15,10 @@
 */
 package com.rosette.elasticsearch;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.Strings;
@@ -25,7 +29,24 @@ import org.elasticsearch.common.logging.ESLoggerFactory;
 public final class RosetteApiWrapper {
 
     private static final Logger LOGGER = ESLoggerFactory.getLogger(RosetteApiWrapper.class.getName());
-    
+
+    private static final String APP_HEADER;
+    static {
+        Properties props = new Properties();
+        String appHeader = "";
+        try (InputStream ins = RosetteApiWrapper.class.getClassLoader().getResourceAsStream("plugin-descriptor.properties")) {
+            props.load(ins);
+            String pluginName = props.getProperty("classname").substring(props.getProperty("classname").lastIndexOf('.') + 1);
+            String pluginVersion = props.getProperty("version");
+            String elasticVersion = props.getProperty("elasticsearch.version");
+            appHeader = String.format("%s-%s/ElasticSearch-%s", pluginName, pluginVersion, elasticVersion);
+        } catch (IOException e) {
+            // unreachable or the plugin is broken
+        } finally {
+            APP_HEADER = appHeader;
+        }
+    }
+
     // TODO: revisit this when we use embedded client
     private HttpRosetteAPI httpRosetteAPI;
 
@@ -46,7 +67,7 @@ public final class RosetteApiWrapper {
         }
 
         HttpRosetteAPI.Builder clientBuilder = new HttpRosetteAPI.Builder();
-        clientBuilder.key(apiKey);
+        clientBuilder.key(apiKey).additionalHeader("X-RosetteAPI-App", APP_HEADER);
         if (!Strings.isNullOrEmpty(altUrl)) {
             LOGGER.info("Using alternative URL for Rosette API at : " + altUrl);
             clientBuilder.url(altUrl);

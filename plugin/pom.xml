@@ -116,10 +116,17 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin-descriptor.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
                 <filtering>false</filtering>
-                <excludes>
-                    <exclude>*.properties</exclude>
-                </excludes>
+                <includes>
+                    <include>plugin-security.policy</include>
+                </includes>
             </resource>
         </resources>
         <testResources>
