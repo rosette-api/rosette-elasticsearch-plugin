@@ -48,7 +48,6 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
 import java.io.FileNotFoundException;
@@ -237,7 +236,6 @@ public class DemoIngestCLI {
         return client.prepareIndex(indexName, typeName)
                      .setId(filename) //use the name of the file as the id to prevent duplicate entries
                      .setSource(builder.endObject())
-                     .setContentType(XContentType.JSON)
                      .get();
     }
 

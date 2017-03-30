@@ -53,7 +53,7 @@
                             <alias>docker-elasticsearch</alias>
                             <name>basistechnologycorporation/rosette-elasticsearch</name>
                             <build>
-                                <from>elasticsearch:${elasticsearch.version}-alpine</from>
+                                <from>docker.elastic.co/elasticsearch/elasticsearch:${elasticsearch.version}</from>
                                 <runCmds>
                                     <run>find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
                                 </runCmds>
@@ -87,6 +87,9 @@
                                 </ports>
                                 <env>
                                     <ROSETTE_API_KEY>${env.ROSETTE_API_KEY}</ROSETTE_API_KEY>
+                                    <network.host>_local_</network.host>
+                                    <http.host>0.0.0.0</http.host>
+                                    <xpack.security.enabled>false</xpack.security.enabled>
                                 </env>
                             </run>
                         </image>
