@@ -52,7 +52,6 @@
     </properties>
     <modules>
         <module>plugin</module>
-        <module>demoingest</module>
         <module>docker</module>
     </modules>
     <dependencyManagement>
