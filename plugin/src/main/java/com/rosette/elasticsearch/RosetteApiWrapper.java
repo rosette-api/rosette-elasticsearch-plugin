@@ -26,7 +26,7 @@ import org.elasticsearch.common.Strings;
 import com.basistech.rosette.api.HttpRosetteAPI;
 import org.elasticsearch.common.logging.ESLoggerFactory;
 
-//Configures and holds on to the shared RosAPI client
+//Configures and holds on to the shared Rosette API client
 public final class RosetteApiWrapper {
 
     private static final Logger LOGGER = ESLoggerFactory.getLogger(RosetteApiWrapper.class.getName());

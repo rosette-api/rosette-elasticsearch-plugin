@@ -17,12 +17,12 @@ There are two common ways to install the plugin into Elasticsearch. (Make sure t
 Please see the [Full Documentation](docs/Rosette-API-Plugin-for-Elasticsearch-Doc-Enrichment.md) for details on how to use the plugin.
 
 #### Note on Versioning:
-The plugin uses semantic versioning. The first three numbers describe which version of Elasticsearch this version of the plugin is compatible with, and the last number indicates the version of theplugin within that Elasticsearch version.
+The plugin uses semantic versioning. The first three numbers describe which version of Elasticsearch this version of the plugin is compatible with, and the last number indicates the version of the plugin within that Elasticsearch version.
 
 For instance, `5.3.0.1` is the second patch version of the plugin for Elasticsearch 5.3.0.
 
 ## How to Build
-Building the plugin requires a Rosette API key. If you don’t already have a Rosette API developer account, head over to [developer.rosette.com](http://developer.rosette.com/signup) to get your free Rosette API key.
+Building the plugin requires a Rosette API key. If you don’t already have a Rosette API developer account, head over to [developer.rosette.com](https://developer.rosette.com/signup) to get your free Rosette API key.
 
 Place the key in the ROSETTE_API_KEY environment variable (ie. `export ROSETTE_API_KEY=<YOUR_API_KEY>`)
 
