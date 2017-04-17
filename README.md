@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rosette-api/rosette-elasticsearch-plugin.svg?branch=master)](https://travis-ci.org/rosette-api/rosette-elasticsearch-plugin)
+
 Rosette Plugin for ElasticSearch
 ================================
 
