@@ -18,7 +18,7 @@ echo "**"
 echo "* First running mvn release:prepare release:perform"
 echo "* (You may be asked for your ssh password)"
 echo "**"
-mvn release:prepare release:perform --batch-mode
+mvn -Prelease release:prepare release:perform --batch-mode
 
 echo "**"
 echo "* Now adding the release to the github repo"
