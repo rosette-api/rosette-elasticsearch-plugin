@@ -16,9 +16,9 @@ A single script takes care of running the maven release process as well as creat
 
 From the root directory of the repo run:
 
-`./tools/release.sh git_username=<github.com username> version=<version being released>`
+`./tools/release.sh git_username=<github.com username> rel_notes=<release notes file>`
 
 As an example:
-`./tools/release.sh git_username=bwsawyer version=5.3.1.0`
+`./tools/release.sh git_username=bwsawyer rel_notes=docs/rel-notes.md`
 
 If successful head to https://oss.sonatype.org/#stagingRepositories to release the staged artifacts.

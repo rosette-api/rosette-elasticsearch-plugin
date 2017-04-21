@@ -142,13 +142,6 @@
                 <version>1.12</version>
                 <executions>
                     <execution>
-                        <id>parse-version</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>parse-version</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>reserve-mockserver-port</id>
                         <phase>generate-sources</phase>
                         <goals>

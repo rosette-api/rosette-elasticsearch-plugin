@@ -2,9 +2,9 @@
 
 #Expects two arguments:
 #- git_username: Your user id on github.com
-#- version: The version number being released
+#- rel_notes: File containing release notes for this release
 #
-# ./tools/release.sh git_username=bwsawyer version=5.3.0.0
+# ./tools/release.sh git_username=bwsawyer rel_notes=./docs/rel-notes.md
 
 set -e
 
@@ -24,6 +24,8 @@ echo "**"
 echo "* Now adding the release to the github repo"
 echo "**"
 
+version=$(sed -n 's/^version=\(.*\)/\1/p' plugin/target/classes/plugin-descriptor.properties)
+
 response=$(curl "https://github.com/rosette-api/rosette-elasticsearch-plugin/releases/tag/$version")
 
 if [ "$response" = "Not Found" ]; then
@@ -32,7 +34,14 @@ if [ "$response" = "Not Found" ]; then
 fi
 
 echo "* You will now be prompted for your github.com password..."
-response=$(curl -XPOST -u $git_username https://api.github.com/repos/rosette-api/rosette-elasticsearch-plugin/releases -d '{ "tag_name": "'"$version"'", "name" : "'"rosette-elasticsearch-plugin-$version"'" }')
+
+notes=""
+#there is some additional json escaping we could do
+if [ $rel_notes ]; then
+  notes=$(cat $rel_notes | awk '{printf "%s\\n", $0}')
+fi
+
+response=$(curl -XPOST -u $git_username https://api.github.com/repos/rosette-api/rosette-elasticsearch-plugin/releases -d '{ "tag_name": "'"$version"'", "name" : "'"rosette-elasticsearch-plugin-$version"'", "body" : "'"$notes"'" }')
 echo "$response"
 uploadurl=$(echo "$response" | sed -n 's/.*"upload_url": "\(.*\){?name,label}",/\1/p')
 
