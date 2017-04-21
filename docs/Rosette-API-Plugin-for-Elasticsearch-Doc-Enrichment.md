@@ -70,10 +70,11 @@ For full details of acceptable parameter values see the [online Rosette API docu
 Given a text field, Rosette detects the language it is most likely to be, and indexes the [identified language](https://developer.rosette.com/features-and-functions#language-support26) in the record.
 
 **Parameters:**
-Name 	| Required 	| Default 		| Description
---------|-----------|----------------|-----------------------------------------------
-field 	| yes 	|  			| Field containing input text
-target_field 	| no 	| ros_language 	| Field to hold output
+
+|Name 	| Required 	| Default 		| Description |
+|--------|-----------|----------------|--------------|
+|field 	| yes 	|  			| Field containing input text|
+|target_field 	| no 	| ros_language 	| Field to hold output|
 
 **Examples:**
 
@@ -101,8 +102,9 @@ Extracts entities (identifies 18 [entity types](https://developer.rosette.com/fe
 Optionally, Rosette can translate the entity mentions to English ([9 supported languages](https://developer.rosette.com/features-and-functions#language-support44)) and determine the sentiment (pos, neg, or neu) surrounding an entity.
 
 **Parameters:**
+
 Name	| Required	| Default	| Description
---------|-----------|------------|----------------------------------------------------
+--------|-----------|------------|--------------------
 field	| yes	|		| Field containing input text
 target_field	| no	| ros_entities	| Field to hold output object
 include_translation	| no	| false	| Boolean indicating whether entity mentions should be translated
@@ -156,6 +158,7 @@ include_offsets	| no	| false	| Boolean indicating whether to include entity offs
 Rosette detects the overall sentiment of a body of text as negative (neg), neutral (neu) or positive (pos). (https://developer.rosette.com/features-and-functions#language-support)
 
 **Parameters:**
+
 Name	| Required	| Default	| Description
 --------|-----------|------------|---------------------------------------------
 field	| yes	|		| Field containing input text
@@ -185,6 +188,7 @@ target_field	| no	| ros_sentiment	| Field to hold output object
 Rosette classifies a text field as a member of a general category. Default categories are the tier 1 categories of the IAB Quality Assurance Guidelines (QAG) Taxonomy. (https://www.iab.com/guidelines/iab-quality-assurance-guidelines-qag-taxonomy/)
 
 **Parameters:**
+
 Name	| Required	| Default	| Description
 ---------|-----------|----------|-------------------------------------------
 field	| yes	|		| Field containing input text
@@ -216,6 +220,7 @@ Accepts a field that it assumes is a name (of a person, location, or organizatio
 A name such as Ichiro Suzuki is of “language origin” Japanese, while the “script” is English, whereas 鈴木一郎 is of “language origin” Japanese and “script” Japanese.
 
 **Parameters:**
+
 Name	| Required	| Default			| Description
 --------|-----------|-------------------|--------------------------------
 field	| yes	|				| Field containing input text
