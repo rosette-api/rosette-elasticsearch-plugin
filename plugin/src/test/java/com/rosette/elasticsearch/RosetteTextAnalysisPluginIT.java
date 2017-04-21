@@ -41,6 +41,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+//Tests all processors against an running embedded ES instance using the deployed Rosette API
 public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
 
     @Override

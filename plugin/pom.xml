@@ -23,7 +23,7 @@
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>5.3.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <inceptionYear>2017</inceptionYear>
@@ -136,20 +136,6 @@
             </testResource>
         </testResources>
         <plugins>
-            <plugin>
-                <groupId>com.basistech</groupId>
-                <artifactId>bbh-maven-plugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <id>osgi-version</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>osgi-version</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
