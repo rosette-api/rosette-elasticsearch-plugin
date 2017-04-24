@@ -2,7 +2,7 @@
 
 #Expects two arguments:
 #- git_username: Your user id on github.com
-#- rel_notes: File containing release notes for this release
+#- rel_notes: (Optional) File containing release notes for this release
 #
 # ./tools/release.sh git_username=bwsawyer rel_notes=./docs/rel-notes.md
 
@@ -13,6 +13,11 @@ ARGS=$@
 for arg in $ARGS; do
   eval "$arg"
 done
+
+if [ -z "$git_username" ]; then
+  echo "Please specify a github username (Eg. ./tools/release.sh git_username=bwsawyer)"
+  exit 1
+fi
 
 echo "**"
 echo "* First running mvn release:prepare release:perform"
