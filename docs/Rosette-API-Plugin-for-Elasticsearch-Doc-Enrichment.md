@@ -1,7 +1,7 @@
 # Rosette API Plugin for Elasticsearch for Document Enrichment
 
 ## Overview
-Basis Technology has written a plugin for Elasticsearch as a means of calling the Rosette API endpoints at indexing time, to annotate unstructured textual fields in a document with text analytic results in separate “metadata” fields.This document enrichment from Rosette allows refinement of search results through these Rosette functions:
+Basis Technology has written a plugin for Elasticsearch as a means of calling the Rosette API endpoints at indexing time, to annotate unstructured textual fields in a document with text analytic results in separate “metadata” fields. This document enrichment from Rosette allows refinement of search results through these Rosette functions:
 - **Language identification** - tag the language of each document 
 - **Sentiment analysis** - tag the sentiment of each document or sentiment surrounding each entity (person, location, organization, etc.) 
 - **Categorization** - tag each document with its primary topic (sports, home/garden, politics, etc.)
@@ -18,13 +18,13 @@ See [Rosette’s Elasticsearch Plugins](https://www.rosette.com/elastic/) or con
 Rosette functionality is called through an ingest node of Elasticsearch that pre-processes documents before indexing takes place. You define a pipeline that specifies the series of processors that transforms or enriches the document. See the [Ingest APIs of Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/master/ingest-apis.html) for more about how to create, add, or delete pipelines.
 ### Version Compatibility
 The plugin uses semantic versioning. The first three numbers indicate the version of Elasticsearch that the plugin is compatible with, and the last number indicates the version of the plugin within that Elasticsearch version.
-For example, 5.3.0.1 is the second patch version of the plugin for Elasticsearch 5.3.0.
+For example, 5.3.1.1 is the second patch version of the plugin for Elasticsearch 5.3.1.
 
 ### Installation
 1. Install Elasticsearch 
 (Make sure the Elasticsearch version is compatible with the Document Enrichment Plugin or the plugin will not install.)
 
-2. Install the Rosette API plugin (where x.x.x.x stands for the version number) by navigating to the elasticsearch-x.x.x.x root directory and running the following. 
+2. Install the Rosette API plugin (where x.x.x.x stands for the version number) by navigating to the elasticsearch-x.x.x root directory and running the following. 
 ```sh
 bin/elasticsearch-plugin install file:///path/to/rosette-elasticsearch-plugin-x.x.x.x.zip
 ```
@@ -214,7 +214,7 @@ target_field	| no	| ros_category	| Field to hold output ([output values](https:/
 ```
 ### Name Translation
 
-**Function**
+**Function:**
 Accepts a field that it assumes is a name (of a person, location, or organization) and translates the name to the target language. 
 
 A name such as Ichiro Suzuki is of “language origin” Japanese, while the “script” is English, whereas 鈴木一郎 is of “language origin” Japanese and “script” Japanese.
