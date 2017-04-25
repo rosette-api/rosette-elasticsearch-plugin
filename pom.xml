@@ -14,13 +14,11 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-parent</artifactId>
-    <version>5.3.1.0-SNAPSHOT</version>
+    <version>5.3.1.0</version>
     <packaging>pom</packaging>
     <parent>
         <artifactId>open-source-parent</artifactId>
@@ -33,7 +31,8 @@
     <scm>
         <connection>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</developerConnection>
-    </scm>
+      <tag>5.3.1.0</tag>
+  </scm>
     <description>ElasticSearch plugin parent</description>
     <distributionManagement>
         <site>
