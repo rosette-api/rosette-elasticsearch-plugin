@@ -120,7 +120,8 @@ include_offsets	| no	| false	| Boolean indicating whether to include entity offs
   "ros_entities" : {
     "field" : "text",
     "target_field" : "entities",
-    "include_translate" : true,
+    "include_translation" : true,
+    "translation_language" : eng,
     "include_sentiment" : true,
     "include_offsets" : true
   }
@@ -199,7 +200,7 @@ target_field	| no	| ros_category	| Field to hold output ([output values](https:/
 **Configuration:**
 ```sh
 {
-  "ros_category" : {
+  "ros_categories" : {
     "field" : "text",
     "target_field" : "category"
   }
@@ -267,7 +268,7 @@ source_language_of_origin	| no	| xxx (Unknown)	| Language of origin of the name 
       "ros_entities" : {
         "field" : "text",
         "target_field" : "entities",
-        "include_translate" : true,
+        "include_translation" : true,
         "include_sentiment" : true
       }
     },
@@ -286,7 +287,7 @@ source_language_of_origin	| no	| xxx (Unknown)	| Language of origin of the name 
       },
     },
     {
-      "ros_category" : {
+      "ros_categories" : {
         "field" : "text",
         "target_field" : "category",
         "ignore_failure" : true
