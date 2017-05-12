@@ -11,7 +11,7 @@ node {
         stage("Build") {
             //Specific Job that tests against the latest version of Elasticsearch
             withMaven(maven: "Basis", mavenLocalRepo: "$JENKINS_HOME/.m2/repository") {
-              sh "mvn -Delasticsearch.version=\$(curl -s http://search.maven.org/solrsearch/select?q=g:%22org.elasticsearch%22+AND+a:%22elasticsearch%22 | jq '.response.docs[0].latestVersion') clean verify"
+              sh "mvn -Delasticsearch.version=\$(curl -s http://search.maven.org/solrsearch/select?q=g:%22org.elasticsearch%22+AND+a:%22elasticsearch%22 | jq -r '.response.docs[0].latestVersion') clean verify"
             }
         }
         slack(true)
