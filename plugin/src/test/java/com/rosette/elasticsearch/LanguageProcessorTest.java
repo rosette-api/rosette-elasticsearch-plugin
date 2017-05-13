@@ -26,7 +26,7 @@ import java.util.Map;
 public class LanguageProcessorTest extends ESSingleNodeTestCase {
 
     public void testLangId() throws Exception {
-        LanguageProcessor processor = new LanguageProcessor(new RosetteApiWrapper(), randomAsciiOfLength(10), "text", "language");
+        LanguageProcessor processor = new LanguageProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "language");
 
         String inputText = "This is a very English document. It should be identified as English.";
 

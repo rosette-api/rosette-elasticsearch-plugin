@@ -26,7 +26,7 @@ import java.util.Map;
 public class SentimentProcessorTest extends ESSingleNodeTestCase {
 
     public void testSentiment() throws Exception {
-        SentimentProcessor processor = new SentimentProcessor(new RosetteApiWrapper(), randomAsciiOfLength(10), "text", "sentiment");
+        SentimentProcessor processor = new SentimentProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "sentiment");
 
         String inputText = "I love this sentence so much I want to marry it!";
 
