@@ -20,12 +20,12 @@ node {
             if (env.OUR_ELASTIC_VERSION == env.LATEST_ELASTIC_VERSION) {
                 echo "No change in ElasticSearch version, skipping build."
             } else if (env.LATEST_ELASTIC_VERSION ==~ /^(\d+\.)?(\d+\.)?(\d+)$/) {
-                echo "ElasticSearch version ${env.LATEST_ELASTIC_VERSION} is not official semver, skipping build."
-            } else {
                 withMaven(maven: "Basis", mavenLocalRepo: "$JENKINS_HOME/.m2/repository") {
                     sh "mvn -Delasticsearch.version=${env.LATEST_ELASTIC_VERSION} clean verify"
                 }
                 slack(true)
+            } else {
+                echo "ElasticSearch version ${env.LATEST_ELASTIC_VERSION} is not official semver, skipping build."
             }
         }
     } catch (e) {
