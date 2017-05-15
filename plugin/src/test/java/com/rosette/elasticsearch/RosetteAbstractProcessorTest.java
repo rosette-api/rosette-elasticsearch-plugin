@@ -39,7 +39,7 @@ public class RosetteAbstractProcessorTest extends ESSingleNodeTestCase {
     }
 
     public void testEmptyField() throws Exception {
-        MockProcessor processor = new MockProcessor(new RosetteApiWrapper(), randomAsciiOfLength(10), "text", "target");
+        MockProcessor processor = new MockProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "target");
 
         //Process document with an empty "text" field
         Map<String, Object> document = new HashMap<>();
@@ -52,7 +52,7 @@ public class RosetteAbstractProcessorTest extends ESSingleNodeTestCase {
 
     @Test(expected = ElasticsearchException.class)
     public void testOverwrite() throws Exception {
-        MockProcessor processor = new MockProcessor(new RosetteApiWrapper(), randomAsciiOfLength(10), "text", "target");
+        MockProcessor processor = new MockProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "target");
 
         //Process document with a value already in the target field
         Map<String, Object> document = new HashMap<>();

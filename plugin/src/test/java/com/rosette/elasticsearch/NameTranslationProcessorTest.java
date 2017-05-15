@@ -28,7 +28,7 @@ import java.util.Map;
 public class NameTranslationProcessorTest extends ESSingleNodeTestCase {
 
     public void testTranslateToEnglish() throws Exception {
-        NameTranslationProcessor processor = new NameTranslationProcessor(new RosetteApiWrapper(), randomAsciiOfLength(10), "text", "translation", LanguageCode.ENGLISH, ISO15924.Latn, "PERSON", LanguageCode.RUSSIAN, ISO15924.Cyrl, LanguageCode.UNKNOWN);
+        NameTranslationProcessor processor = new NameTranslationProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "translation", LanguageCode.ENGLISH, ISO15924.Latn, "PERSON", LanguageCode.RUSSIAN, ISO15924.Cyrl, LanguageCode.UNKNOWN);
 
         String inputText = "Владимир Путин";
 
