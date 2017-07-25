@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-parent</artifactId>
-    <version>5.3.1.1-SNAPSHOT</version>
+    <version>5.5.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <artifactId>open-source-parent</artifactId>
@@ -42,8 +42,8 @@
     </distributionManagement>
     <properties>
         <jdk.version>1.8</jdk.version>
-        <elasticsearch.version>5.3.1</elasticsearch.version>
-        <rosette.api.binding.version>1.5.6</rosette.api.binding.version>
+        <elasticsearch.version>5.5.0</elasticsearch.version>
+        <rosette.api.binding.version>1.7.3</rosette.api.binding.version>
         <bnd-maven-plugin.version>3.2.0</bnd-maven-plugin.version>
         <bt.compile.source>${jdk.version}</bt.compile.source>
         <bt.compile.target>${jdk.version}</bt.compile.target>
@@ -79,14 +79,6 @@
                 <groupId>org.elasticsearch.test</groupId>
                 <artifactId>framework</artifactId>
                 <version>${elasticsearch.version}</version>
-            </dependency>
-            <!-- Have to make sure that our test dependency versions match up
-                 exactly to what Elastic is using (in this version) so that we
-                 don't receive security exceptions. -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
