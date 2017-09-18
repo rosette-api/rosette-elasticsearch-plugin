@@ -1,5 +1,6 @@
 language: java
 script: mvn verify --settings .travis.settings.xml
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings .travis.settings.xml
 jdk:
 - oraclejdk8
 
