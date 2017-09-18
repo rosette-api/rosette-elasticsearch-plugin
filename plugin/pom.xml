@@ -21,7 +21,7 @@
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>5.4.2.1-SNAPSHOT</version>
+        <version>5.5.2.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <inceptionYear>2017</inceptionYear>
@@ -70,21 +70,6 @@
             <groupId>org.elasticsearch.test</groupId>
             <artifactId>framework</artifactId>
             <scope>test</scope>
-        </dependency>
-        <!-- Have to make sure that our test dependency versions match up
-             exactly to what Elastic is using (in this version) so that we
-             don't receive security exceptions. -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-            <exclusions>
-              <exclusion>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-core</artifactId>
-              </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
