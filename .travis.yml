@@ -1,9 +1,8 @@
 language: java
-script: mvn verify
+script: mvn verify --settings .travis.settings.xml
 jdk:
 - oraclejdk8
 
-#
 services:
   - docker
 
