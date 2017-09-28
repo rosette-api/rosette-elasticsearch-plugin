@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-parent</artifactId>
-    <version>5.6.1.1-SNAPSHOT</version>
+    <version>5.6.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <artifactId>open-source-parent</artifactId>
@@ -27,17 +27,17 @@
         <relativePath />
     </parent>
     <inceptionYear>2017</inceptionYear>
-    <url>http://rosette-api.github.io/rosette-elasticsearch-plugin</url>
+    <url>http://Karin-Basis.github.io/rosette-elasticsearch-plugin</url>
     <scm>
-        <connection>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</developerConnection>
+        <connection>scm:git:git@github.com:Karin-Basis/rosette-elasticsearch-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:Karin-Basis/rosette-elasticsearch-plugin.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
     <description>ElasticSearch plugin parent</description>
     <distributionManagement>
         <site>
             <id>site</id>
-            <url>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</url>
+            <url>scm:git:git@github.com:Karin-Basis/rosette-elasticsearch-plugin.git</url>
         </site>
     </distributionManagement>
     <properties>
