@@ -25,17 +25,17 @@
         <relativePath>..</relativePath>
     </parent>
     <inceptionYear>2017</inceptionYear>
-    <url>http://Karin-Basis.github.io/${project.artifactId}</url>
+    <url>http://rosette-api.github.io/${project.artifactId}</url>
     <scm>
-        <connection>scm:git:git@github.com:Karin-Basis/${project.artifactId}.git</connection>
-        <developerConnection>scm:git:git@github.com:Karin-Basis/${project.artifactId}.git</developerConnection>
+        <connection>scm:git:git@github.com:rosette-api/${project.artifactId}.git</connection>
+        <developerConnection>scm:git:git@github.com:rosette-api/${project.artifactId}.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
     <description>ElasticSearch analysis plugin powered by Rosette API</description>
     <distributionManagement>
         <site>
             <id>site</id>
-            <url>scm:git:git@github.com:Karin-Basis/${project.artifactId}.git</url>
+            <url>scm:git:git@github.com:rosette-api/${project.artifactId}.git</url>
         </site>
     </distributionManagement>
     <properties>

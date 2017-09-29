@@ -11,9 +11,6 @@ set -e
 ELASTIC_VERSION=$1
 ACCESS_TOKEN=$2
 
-echo "Building with the latest Elasticsearch $1"
-mvn -Delasticsearch.version=${ELASTIC_VERSION} clean verify
-
 # Set versions so they will be incremented correctly
 mvn versions:update-property -Dproperty=elasticsearch.version -DnewVersion=[${ELASTIC_VERSION}] -DallowDowngrade  -DgenerateBackupPoms=false
 mvn versions:set -DnewVersion=${ELASTIC_VERSION}.0-SNAPSHOT -DgenerateBackupPoms=false
@@ -31,7 +28,7 @@ echo "**"
 
 version=$(sed -n 's/^version=\(.*\)/\1/p' plugin/target/classes/plugin-descriptor.properties)
 
-if [ "$version" == ${ELASTIC_VERSION ]; then
+if [ "$version" == ${ELASTIC_VERSION} ]; then
   echo "Error: version $version does not match Elastic version ${ELASTIC_VERSION}"
   exit 1
 fi

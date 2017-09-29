@@ -27,17 +27,17 @@
         <relativePath />
     </parent>
     <inceptionYear>2017</inceptionYear>
-    <url>http://Karin-Basis.github.io/rosette-elasticsearch-plugin</url>
+    <url>http://rosette-api.github.io/rosette-elasticsearch-plugin</url>
     <scm>
-        <connection>scm:git:git@github.com:Karin-Basis/rosette-elasticsearch-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:Karin-Basis/rosette-elasticsearch-plugin.git</developerConnection>
+        <connection>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
     <description>ElasticSearch plugin parent</description>
     <distributionManagement>
         <site>
             <id>site</id>
-            <url>scm:git:git@github.com:Karin-Basis/rosette-elasticsearch-plugin.git</url>
+            <url>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</url>
         </site>
     </distributionManagement>
     <properties>
