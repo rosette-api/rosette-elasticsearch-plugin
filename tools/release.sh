@@ -33,7 +33,7 @@ if [ "$version" == ${ELASTIC_VERSION} ]; then
   exit 1
 fi
 
-response=$(curl "https://github.com/Karin-Basis/rosette-elasticsearch-plugin/releases/tag/$version")
+response=$(curl "https://github.com/rosette-api/rosette-elasticsearch-plugin/releases/tag/$version")
 
 if [ "$response" = "Not Found" ]; then
   echo "FAILURE: Failed to find release tag for the given version. Did mvn release run successfully?"
@@ -48,7 +48,7 @@ notes="Release compatible with Elasticsearch ${ELASTIC_VERSION}"
 
 response=$(curl -sS -H "Content-Type: application/json" \
 	    -d '{ "tag_name": "'"$version"'", "name" : "'"rosette-elasticsearch-plugin-$version"'", "body" : "'"$notes"'" }'
-		    https://api.github.com/repos/Karin-Basis/rosette-elasticsearch-plugin/releases?access_token=${ACCESS_TOKEN})
+		    https://api.github.com/repos/rosette-api/rosette-elasticsearch-plugin/releases?access_token=${ACCESS_TOKEN})
 echo "$response"
 uploadurl=$(echo "$response" | sed -n 's/.*"upload_url": "\(.*\){?name,label}",/\1/p')
 
