@@ -20,6 +20,7 @@ echo "**"
 echo "* First running mvn release:prepare release:perform"
 echo "* (You may be asked for your ssh password)"
 echo "**"
+export GPG_TTY=$(tty)
 mvn -Prelease release:prepare release:perform --batch-mode
 
 echo "**"
