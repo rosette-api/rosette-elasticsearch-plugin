@@ -4,20 +4,17 @@
 #- git_username: Your user id on github.com
 #- rel_notes: (Optional) File containing release notes for this release
 #
-# ./tools/release.sh git_username=bwsawyer rel_notes=./docs/rel-notes.md
+# ./tools/release.sh ${ELASTIC_VERSION} ${GITHUB_ACCESS_TOKEN}
 
 set -e
 
-ARGS=$@
+ELASTIC_VERSION=$1
+ACCESS_TOKEN=$2
 
-for arg in $ARGS; do
-  eval "$arg"
-done
-
-if [ -z "$git_username" ]; then
-  echo "Please specify a github username (Eg. ./tools/release.sh git_username=bwsawyer)"
-  exit 1
-fi
+# Set versions so they will be incremented correctly
+mvn versions:update-property -Dproperty=elasticsearch.version -DnewVersion=[${ELASTIC_VERSION}] -DallowDowngrade  -DgenerateBackupPoms=false
+mvn versions:set -DnewVersion=${ELASTIC_VERSION}.0-SNAPSHOT -DgenerateBackupPoms=false
+git commit -a -m "Auto-update ElasticSearch to $ELASTIC_VERSION"
 
 echo "**"
 echo "* First running mvn release:prepare release:perform"
@@ -31,6 +28,11 @@ echo "**"
 
 version=$(sed -n 's/^version=\(.*\)/\1/p' plugin/target/classes/plugin-descriptor.properties)
 
+if [ "$version" == ${ELASTIC_VERSION} ]; then
+  echo "Error: version $version does not match Elastic version ${ELASTIC_VERSION}"
+  exit 1
+fi
+
 response=$(curl "https://github.com/rosette-api/rosette-elasticsearch-plugin/releases/tag/$version")
 
 if [ "$response" = "Not Found" ]; then
@@ -40,13 +42,13 @@ fi
 
 echo "* You will now be prompted for your github.com password..."
 
-notes=""
-#there is some additional json escaping we could do
-if [ $rel_notes ]; then
-  notes=$(cat $rel_notes | awk '{printf "%s\\n", $0}')
-fi
+notes="Release compatible with Elasticsearch ${ELASTIC_VERSION}"
 
-response=$(curl -XPOST -u $git_username https://api.github.com/repos/rosette-api/rosette-elasticsearch-plugin/releases -d '{ "tag_name": "'"$version"'", "name" : "'"rosette-elasticsearch-plugin-$version"'", "body" : "'"$notes"'" }')
+#response=$(curl -XPOST -u $git_username https://api.github.com/repos/rosette-api/rosette-elasticsearch-plugin/releases -d '{ "tag_name": "'"$version"'", "name" : "'"rosette-elasticsearch-plugin-$version"'", "body" : "'"$notes"'" }')
+
+response=$(curl -sS -H "Content-Type: application/json" \
+	    -d '{ "tag_name": "'"$version"'", "name" : "'"rosette-elasticsearch-plugin-$version"'", "body" : "'"$notes"'" }'
+		    https://api.github.com/repos/rosette-api/rosette-elasticsearch-plugin/releases?access_token=${ACCESS_TOKEN})
 echo "$response"
 uploadurl=$(echo "$response" | sed -n 's/.*"upload_url": "\(.*\){?name,label}",/\1/p')
 
@@ -58,7 +60,7 @@ fi
 filename="plugin/target/releases/rosette-elasticsearch-plugin-$version.zip"
 fullurl="$uploadurl?name=$(basename $filename)"
 echo "* Adding plugin zip package to release assets..."
-response=$(curl -XPOST -H "Content-Type: application/zip" -u  $git_username "$uploadurl?name=$(basename $filename)" --data-binary @"$filename")
+response=$(curl -XPOST -H "Content-Type: application/zip"  "$uploadurl?name=$(basename $filename)&access_token=${ACCESS_TOKEN}" --data-binary @"$filename")
 
 echo "**"
 echo "* Release success!"
