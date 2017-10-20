@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 #Expects two arguments:
-#- git_username: Your user id on github.com
-#- rel_notes: (Optional) File containing release notes for this release
+#- ELASTIC_VERSION: The version of elastic for which you are building the plugin
+#- GITHUB_ACCESS_TOKEN: Personal OAuth access token with full repo permissions.
 #
 # ./tools/release.sh ${ELASTIC_VERSION} ${GITHUB_ACCESS_TOKEN}
 
