@@ -58,13 +58,14 @@ public final class RosetteApiWrapper {
     RosetteApiWrapper(String apiKey, String altUrl) {
         if (Strings.isNullOrEmpty(apiKey)) {
             apiKey = System.getenv("ROSETTE_API_KEY");
-            if (Strings.isNullOrEmpty(apiKey)) {
-                throw new ElasticsearchException("Rosette plugin requires setting an API Key either via the '" + RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey() + "' setting, or the 'ROSETTE_API_KEY' environment variable.");
-            }
         }
 
         if (Strings.isNullOrEmpty(altUrl)) {
             altUrl = System.getenv("ROSETTE_API_URL");
+        }
+
+        if ((HttpRosetteAPI.DEFAULT_URL_BASE.equalsIgnoreCase(altUrl) || Strings.isNullOrEmpty(altUrl)) && Strings.isNullOrEmpty(apiKey)) {
+            throw new ElasticsearchException("Rosette plugin requires setting an API Key either via the '" + RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey() + "' setting, or the 'ROSETTE_API_KEY' environment variable.");
         }
 
         HttpRosetteAPI.Builder clientBuilder = new HttpRosetteAPI.Builder();
