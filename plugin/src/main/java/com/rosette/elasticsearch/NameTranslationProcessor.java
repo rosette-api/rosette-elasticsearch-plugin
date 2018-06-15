@@ -60,7 +60,9 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
     @Override
     public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /name-translation endpoint and set the result in the field
-        NameTranslationRequest request = new NameTranslationRequest.Builder(inputText, targetLanguage)
+        NameTranslationRequest request = NameTranslationRequest.builder()
+                .name(inputText)
+                .targetLanguage(targetLanguage)
                 .entityType(entityType)
                 .targetScript(targetScript)
                 .sourceLanguageOfUse(sourceLanguage)

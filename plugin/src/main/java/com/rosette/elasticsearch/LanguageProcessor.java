@@ -44,7 +44,7 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
     @Override
     public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /language endpoint and set the result in the field
-        DocumentRequest<LanguageOptions> request = new DocumentRequest.Builder<LanguageOptions>().content(inputText).build();
+        DocumentRequest<LanguageOptions> request = DocumentRequest.<LanguageOptions>builder().content(inputText).build();
         LanguageResponse response;
         try {
             // RosApi client binding's Jackson needs elevated privilege

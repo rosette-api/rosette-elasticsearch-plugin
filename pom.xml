@@ -18,12 +18,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-parent</artifactId>
-    <version>6.2.4.1-SNAPSHOT</version>
+    <version>6.3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <artifactId>open-source-parent</artifactId>
         <groupId>com.basistech</groupId>
-        <version>1.1.1</version>
+        <version>1.1.9</version>
         <relativePath />
     </parent>
     <inceptionYear>2017</inceptionYear>
@@ -42,8 +42,8 @@
     </distributionManagement>
     <properties>
         <jdk.version>1.8</jdk.version>
-        <elasticsearch.version>6.2.4</elasticsearch.version>
-        <rosette.api.binding.version>1.8.2</rosette.api.binding.version>
+        <elasticsearch.version>6.3.0</elasticsearch.version>
+        <rosette.api.binding.version>1.10.1</rosette.api.binding.version>
         <bnd-maven-plugin.version>3.2.0</bnd-maven-plugin.version>
         <bt.compile.source>${jdk.version}</bt.compile.source>
         <bt.compile.target>${jdk.version}</bt.compile.target>
