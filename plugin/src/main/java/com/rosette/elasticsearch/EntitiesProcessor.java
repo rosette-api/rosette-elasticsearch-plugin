@@ -69,13 +69,13 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
         try {
             //SENTIMENT
             if (doSentiment) {
-                DocumentRequest<SentimentOptions> sentrequest = new DocumentRequest.Builder<SentimentOptions>().content(inputText).build();
+                DocumentRequest<SentimentOptions> sentrequest = DocumentRequest.<SentimentOptions>builder().content(inputText).build();
                 adm = AccessController.doPrivileged((PrivilegedAction<AnnotatedText>) () ->
                         rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.SENTIMENT_SERVICE_PATH, sentrequest)
                 );
             } else {
                 //REX
-                DocumentRequest<EntitiesOptions> entityrequest = new DocumentRequest.Builder<EntitiesOptions>().content(inputText).build();
+                DocumentRequest<EntitiesOptions> entityrequest = DocumentRequest.<EntitiesOptions>builder().content(inputText).build();
                 adm = AccessController.doPrivileged((PrivilegedAction<AnnotatedText>) () ->
                         rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.ENTITIES_SERVICE_PATH, entityrequest)
                 );
@@ -138,7 +138,7 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
         //RNT
         if (doTranslate
                 && (type.equalsIgnoreCase("PERSON") || type.equalsIgnoreCase("LOCATION") || type.equalsIgnoreCase("ORGANIZATION"))) {
-            NameTranslationRequest rntrequest = new NameTranslationRequest.Builder(headMention, translateLanguage).entityType(type).build();
+            NameTranslationRequest rntrequest = NameTranslationRequest.builder().name(headMention).targetLanguage(translateLanguage).entityType(type).build();
 
             NameTranslationResponse rntresponse;
             try {

@@ -45,7 +45,7 @@ public class SentimentProcessor extends RosetteAbstractProcessor {
     @Override
     public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /sentiment endpoint and set the top result in the field
-        DocumentRequest<SentimentOptions> request = new DocumentRequest.Builder<SentimentOptions>().content(inputText).build();
+        DocumentRequest<SentimentOptions> request = DocumentRequest.<SentimentOptions>builder().content(inputText).build();
         SentimentResponse response;
         try {
             // RosApi client binding's Jackson needs elevated privilege

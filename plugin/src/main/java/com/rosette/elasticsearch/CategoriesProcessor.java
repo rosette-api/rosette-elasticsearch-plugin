@@ -44,7 +44,7 @@ public class CategoriesProcessor extends RosetteAbstractProcessor {
     @Override
     public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /categories endpoint and set the top result in the field
-        DocumentRequest<CategoriesOptions> request = new DocumentRequest.Builder<CategoriesOptions>().content(inputText).build();
+        DocumentRequest<CategoriesOptions> request = DocumentRequest.<CategoriesOptions>builder().content(inputText).build();
         CategoriesResponse response;
         try {
             // RosApi client binding's Jackson needs elevated privilege

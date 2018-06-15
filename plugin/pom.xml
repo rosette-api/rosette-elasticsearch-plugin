@@ -21,7 +21,7 @@
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>6.2.4.1-SNAPSHOT</version>
+        <version>6.3.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <inceptionYear>2017</inceptionYear>
@@ -81,10 +81,10 @@
             <artifactId>mockserver-netty</artifactId>
             <version>${mockserver.version}</version>
             <exclusions>
-              <exclusion>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-              </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
             </exclusions>
             <scope>test</scope>
         </dependency>
@@ -148,36 +148,36 @@
             </plugin>
             <!--Shading and relocating jackson so that the plugin can use the jackson-core jar with elevated priviliges-->
             <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-shade-plugin</artifactId>
-              <executions>
-                <execution>
-                  <phase>package</phase>
-                  <goals>
-                    <goal>shade</goal>
-                  </goals>
-                  <configuration>
-                    <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-                    <createSourcesJar>true</createSourcesJar>
-                    <artifactSet>
-                    <!-- have to include all dependencies that use jackson due to relocation -->
-                      <includes>
-                        <include>com.basistech:adm-json</include>
-                        <include>com.basistech.rosette:rosette-api</include>
-                        <include>com.basistech.rosette:rosette-api-json</include>
-                        <include>com.basistech:common-api-jackson</include>
-                        <include>com.fasterxml.jackson.core:*</include>
-                      </includes>
-                    </artifactSet>
-                    <relocations>
-                      <relocation>
-                        <pattern>com.fasterxml</pattern>
-                        <shadedPattern>com.basistech.shaded.com.fasterxml</shadedPattern>
-                      </relocation>
-                    </relocations>
-                  </configuration>
-                </execution>
-              </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+                            <createSourcesJar>true</createSourcesJar>
+                            <artifactSet>
+                                <!-- have to include all dependencies that use jackson due to relocation -->
+                                <includes>
+                                    <include>com.basistech:adm-json</include>
+                                    <include>com.basistech.rosette:rosette-api</include>
+                                    <include>com.basistech.rosette:rosette-api-json</include>
+                                    <include>com.basistech:common-api-jackson</include>
+                                    <include>com.fasterxml.jackson.core:*</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.fasterxml</pattern>
+                                    <shadedPattern>com.basistech.shaded.com.fasterxml</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -229,6 +229,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <systemPropertyVariables>
+                        <tests.security.manager>false</tests.security.manager>
+                    </systemPropertyVariables>
                     <environmentVariables>
                         <ROSETTE_API_URL>http://localhost:${mockserver.port}${mockserver.baseurl}</ROSETTE_API_URL>
                     </environmentVariables>
@@ -238,21 +241,24 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>
-                  <execution>
-                    <goals>
-                      <goal>integration-test</goal>
-                      <goal>verify</goal>
-                    </goals>
-                    <configuration>
-                    <!-- Have to exclude the shaded jars to prevent jar hell during IT tests -->
-                      <classpathDependencyExcludes>
-                          <exclude>com.basistech:adm-json</exclude>
-                          <exclude>com.basistech.rosette:rosette-api</exclude>
-                          <exclude>com.basistech.rosette:rosette-api-json</exclude>
-                          <exclude>com.basistech:common-api-jackson</exclude>
-                      </classpathDependencyExcludes>
-                    </configuration>
-                  </execution>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Have to exclude the shaded jars to prevent jar hell during IT tests -->
+                            <classpathDependencyExcludes>
+                                <exclude>com.basistech:adm-json</exclude>
+                                <exclude>com.basistech.rosette:rosette-api</exclude>
+                                <exclude>com.basistech.rosette:rosette-api-json</exclude>
+                                <exclude>com.basistech:common-api-jackson</exclude>
+                            </classpathDependencyExcludes>
+                            <systemPropertyVariables>
+                                <tests.security.manager>false</tests.security.manager>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
