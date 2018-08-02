@@ -125,6 +125,7 @@
                     <configuration>
                       <executable>./test.sh</executable>
                       <arguments>
+                          <argument>${host.ip}</argument>
                           <argument>${docker.port}</argument>
                       </arguments>
                       <outputFile>${curl.output}</outputFile>
