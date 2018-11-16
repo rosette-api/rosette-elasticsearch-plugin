@@ -23,7 +23,7 @@ import com.basistech.rosette.apimodel.DocumentRequest;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.logging.ESLoggerFactory;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
@@ -34,8 +34,7 @@ import java.util.Map;
 public class CategoriesProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_categories";
-
-    private static final Logger LOGGER = ESLoggerFactory.getLogger(CategoriesProcessor.class.getName());
+    private static final Logger LOGGER = Loggers.getLogger(CategoriesProcessor.class, CategoriesProcessor.class.getName());
 
     CategoriesProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField) {
         super(rosAPI, tag, TYPE, inputField, targetField);
