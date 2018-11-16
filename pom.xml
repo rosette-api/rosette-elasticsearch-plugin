@@ -42,7 +42,7 @@
     </distributionManagement>
     <properties>
         <jdk.version>1.8</jdk.version>
-        <elasticsearch.version>6.4.3</elasticsearch.version>
+        <elasticsearch.version>6.5.0</elasticsearch.version>
         <rosette.api.binding.version>1.10.1</rosette.api.binding.version>
         <bnd-maven-plugin.version>3.2.0</bnd-maven-plugin.version>
         <bt.compile.source>${jdk.version}</bt.compile.source>

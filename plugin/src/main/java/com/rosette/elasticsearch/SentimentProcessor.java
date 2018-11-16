@@ -23,7 +23,7 @@ import com.basistech.rosette.apimodel.SentimentResponse;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.logging.ESLoggerFactory;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
@@ -36,7 +36,7 @@ public class SentimentProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_sentiment";
 
-    private static final Logger LOGGER = ESLoggerFactory.getLogger(SentimentProcessor.class.getName());
+    private static final Logger LOGGER = Loggers.getLogger(SentimentProcessor.class, SentimentProcessor.class.getName());
 
     SentimentProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField) {
         super(rosAPI, tag, TYPE, inputField, targetField);

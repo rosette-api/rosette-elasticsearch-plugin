@@ -28,7 +28,7 @@ import com.basistech.rosette.dm.Mention;
 import com.basistech.util.LanguageCode;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.common.logging.ESLoggerFactory;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
@@ -45,7 +45,7 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_entities";
 
-    private static final Logger LOGGER = ESLoggerFactory.getLogger(EntitiesProcessor.class.getName());
+    private static final Logger LOGGER = Loggers.getLogger(EntitiesProcessor.class, EntitiesProcessor.class.getName());
 
     private boolean includeOffsets;
     private boolean doTranslate;

@@ -23,7 +23,7 @@ import com.basistech.util.ISO15924;
 import com.basistech.util.LanguageCode;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.common.logging.ESLoggerFactory;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
@@ -36,7 +36,7 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_name_translation";
 
-    private static final Logger LOGGER = ESLoggerFactory.getLogger(NameTranslationProcessor.class.getName());
+    private static final Logger LOGGER = Loggers.getLogger(NameTranslationProcessor.class, NameTranslationProcessor.class.getName());
 
     private LanguageCode targetLanguage;
     private ISO15924 targetScript;

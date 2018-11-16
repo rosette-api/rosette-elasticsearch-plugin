@@ -22,7 +22,7 @@ import com.basistech.rosette.apimodel.LanguageOptions;
 import com.basistech.rosette.apimodel.LanguageResponse;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.common.logging.ESLoggerFactory;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
@@ -35,7 +35,7 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_language";
 
-    private static final Logger LOGGER = ESLoggerFactory.getLogger(LanguageProcessor.class.getName());
+    private static final Logger LOGGER = Loggers.getLogger(LanguageProcessor.class, LanguageProcessor.class.getName());
 
     LanguageProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField) {
         super(rosAPI, tag, TYPE, inputField, targetField);

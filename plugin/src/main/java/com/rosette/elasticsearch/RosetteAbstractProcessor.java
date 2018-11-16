@@ -40,20 +40,20 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
     }
 
     @Override
-    public void execute(IngestDocument ingestDocument) throws Exception {
+    public IngestDocument execute(IngestDocument ingestDocument) throws Exception {
         if (ingestDocument.hasField(targetField)) {
             throw new ElasticsearchException("Document already contains data in target field for this ingest processor: " + type);
         }
         if (!ingestDocument.hasField(inputField)) {
             //Do nothing
-            return;
+            return ingestDocument;
         }
 
         String inputText = ingestDocument.getFieldValue(inputField, String.class);
 
         if (Strings.isNullOrEmpty(inputText)) {
             //Do nothing
-            return;
+            return ingestDocument;
         }
 
         SecurityManager sm = System.getSecurityManager();
@@ -62,6 +62,7 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
         }
 
         processDocument(inputText, ingestDocument);
+        return ingestDocument;
     }
 
     @Override
