@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-     Copyright 2017 Basis Technology Corp.
+     Copyright 2019 Basis Technology Corp.
  
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>6.5.4.1-SNAPSHOT</version>
+        <version>6.5.2.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <inceptionYear>2017</inceptionYear>
