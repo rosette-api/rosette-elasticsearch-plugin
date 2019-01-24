@@ -19,16 +19,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.logging.Loggers;
 
 import com.basistech.rosette.api.HttpRosetteAPI;
+import org.elasticsearch.common.logging.Loggers;
 
 //Configures and holds on to the shared Rosette API client
 public final class RosetteApiWrapper {
@@ -73,20 +69,12 @@ public final class RosetteApiWrapper {
         }
 
         HttpRosetteAPI.Builder clientBuilder = new HttpRosetteAPI.Builder();
-        clientBuilder.httpClient(createHttpClient()).key(apiKey).additionalHeader("X-RosetteAPI-App", APP_HEADER);
+        clientBuilder.key(apiKey).additionalHeader("X-RosetteAPI-App", APP_HEADER);
         if (!Strings.isNullOrEmpty(altUrl)) {
             LOGGER.info("Using alternative URL for Rosette API at : " + altUrl);
             clientBuilder.url(altUrl);
         }
         httpRosetteAPI = clientBuilder.build();
-    }
-
-    private CloseableHttpClient createHttpClient() {
-        HttpClientBuilder builder = HttpClients.custom();
-        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-        builder.setConnectionManager(cm);
-        builder.useSystemProperties();
-        return builder.build();
     }
 
     public HttpRosetteAPI getHttpRosetteAPI() {
