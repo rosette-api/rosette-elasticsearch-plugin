@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.19.1</version>
+                <version>0.29.0</version>
                 <configuration>
                     <showLogs>true</showLogs>
                     <verbose>true</verbose>
@@ -72,7 +72,6 @@
                             </build>
                             <run>
                                 <wait>
-                                    <log>Elasticsearch launched</log>
                                     <http>
                                         <url>http://${host.ip}:${docker.port}</url>
                                         <method>GET</method>
@@ -114,7 +113,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.4.0</version>
                 <executions>
                   <execution>
                     <id>run_IT</id>
@@ -161,7 +159,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.12</version>
+                        <version>${build-helper-maven-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>get-local-ip</id>
@@ -190,7 +188,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.9.1</version>
+                        <version>${build-helper-maven-plugin.version}</version>
                         <executions>
                             <execution>
                                 <phase>validate</phase>
