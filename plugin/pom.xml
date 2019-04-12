@@ -70,6 +70,17 @@
             <groupId>org.elasticsearch.test</groupId>
             <artifactId>framework</artifactId>
             <scope>test</scope>
+            <!-- dependency convergence error with org.apache.httpcomponents:httpclient:jar:4.5.2 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -117,7 +128,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.12</version>
+                <version>${build-helper-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>reserve-mockserver-port</id>
