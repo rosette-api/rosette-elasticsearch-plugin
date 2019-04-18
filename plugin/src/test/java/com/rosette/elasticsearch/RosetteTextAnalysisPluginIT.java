@@ -23,6 +23,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.plugins.PluginInfo;
@@ -167,7 +168,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
     private SearchResponse exercisePipeline(String inputText, String pipelineName) throws IOException {
 
         //Add the ingest pipeline
-        AcknowledgedResponse pipelineResponse = client().admin().cluster().preparePutPipeline(pipelineName, getProcessorConfig(pipelineName)).get();
+        AcknowledgedResponse pipelineResponse = client().admin().cluster().preparePutPipeline(pipelineName, getProcessorConfig(pipelineName), XContentType.JSON).get();
         assertTrue("Failed to add ingest pipeline", pipelineResponse.isAcknowledged());
 
         //Add a document that uses the ingest pipeline
