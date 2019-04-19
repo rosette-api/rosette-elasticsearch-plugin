@@ -106,7 +106,7 @@ curl -fsSL -H "Content-Type: application/json" -XPUT "$1:$2/_ingest/pipeline/ros
 }
 ' || ((code++))
 
-curl -fsSL -H "Content-Type: application/json" -XPUT "$1:$2/test_idx?pretty" -d'
+curl -fsSL -H "Content-Type: application/json" -XPUT "$1:$2/test_idx?include_type_name=true&pretty" -d'
 {
   "mappings": {
     "rosette": {
