@@ -3,20 +3,31 @@
 Rosette Plugin for ElasticSearch
 ================================
 
-A Document Enrichment plugin that brings the [Rosette API](https://developer.rosette.com/) to Elasticsearch. 
+A Document Enrichment plugin that brings the Rosette API to Elasticsearch.
 
-This Ingest plugin allows Elasticsearch users to perform Language Identification, Sentiment Analysis, Entity Extraction, 
+This Ingest plugin allows Elasticsearch users to perform Language Identification, Sentiment Analysis, Entity Extraction,
 Categorization, and Name Translation on documents as they're indexed.
+
+## Rosette API
+The Rosette Text Analytics Platform uses natural language processing, statistical modeling, and machine learning to
+analyze unstructured and semi-structured text across 364 language-encoding-script combinations, revealing valuable
+information and actionable data. Rosette provides endpoints for extracting entities and relationships, translating and
+comparing the similarity of names, categorizing and adding linguistic tags to text and more.
+
+## Rosette API Access
+- Rosette Cloud [Sign Up](https://developer.rosette.com/signup)
+- Rosette Enterprise [Evaluation](https://www.rosette.com/product-eval/)
+
+## Quick Start
 
 ## How to Install
 There are two common ways to install the plugin into Elasticsearch. (Make sure the version of the plugin matches the version of Elasticsearch you are using!)
 
 - Download the desired version of the plugin from the Releases tab on github
   - Install using: `bin/elasticsearch-plugin install file:///<path_to_plugin>`
-- Install from a deployed maven artifact: 
+- Install from a deployed maven artifact:
 `bin/elasticsearch-plugin install com.rosette.elasticsearch:rosette-elasticsearch-plugin:<plugin_version>`
 
-Please see the [Full Documentation](docs/Rosette-API-Plugin-for-Elasticsearch-Doc-Enrichment.md) for details on how to use the plugin.
 
 #### Note on Versioning:
 The plugin uses semantic versioning. The first three numbers describe which version of Elasticsearch this version of the plugin is compatible with, and the last number indicates the version of the plugin within that Elasticsearch version.
@@ -33,3 +44,15 @@ Then run `mvn clean install`
 The plugin zip can then be found in `plugin/target/releases/` ready to be installed into the appropriate version of Elasticsearch.
 
 You can also [Test with Docker](docker/README.md)
+
+#### Documentation & Support
+- [Full Plugin Documentation](docs/Rosette-API-Plugin-for-Elasticsearch-Doc-Enrichment.md)
+- [Rosette Platform API](https://developer.rosette.com/features-and-functions)
+- [Rosette Platform Release Notes](https://support.rosette.com/hc/en-us/articles/360018354971-Release-Notes)
+- [Support](https://support.rosette.com)
+- [Binding License: Apache 2.0](https://github.com/rosette-api/python/blob/develop/LICENSE.txt)
+
+
+
+
+
