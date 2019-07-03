@@ -131,7 +131,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         //Check the source for the expected entity result
         assertFalse(((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
         Map entity = (Map)((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
-        assertThat(entity.get("mention"), Matchers.equalTo("Ghostbusters"));
+        assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
     }
 
     public void testEntitiesWithSentiment() throws Exception {
@@ -143,8 +143,8 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         //Check the source for the expected entity level sentiment
         assertFalse(((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
         Map entity = (Map)((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
-        assertThat(entity.get("mention"), Matchers.equalTo("Ghostbusters"));
-        assertThat(entity.get("sentiment"), Matchers.equalTo("pos"));
+        assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
+        assertThat(entity.get("sentiment"), Matchers.equalTo("neu"));
     }
 
     //Test that all (or most) of the processors work together
@@ -162,7 +162,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
 
         assertFalse(((List)source.get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
         Map entity = (Map)((List)source.get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
-        assertThat(entity.get("mention"), Matchers.equalTo("Ghostbusters"));
+        assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
     }
 
     private SearchResponse exercisePipeline(String inputText, String pipelineName) throws IOException {
