@@ -21,7 +21,7 @@
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>7.2.0.0</version>
+        <version>7.2.0.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <inceptionYear>2017</inceptionYear>
@@ -29,7 +29,7 @@
     <scm>
         <connection>scm:git:git@github.com:rosette-api/${project.artifactId}.git</connection>
         <developerConnection>scm:git:git@github.com:rosette-api/${project.artifactId}.git</developerConnection>
-        <tag>7.2.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <description>ElasticSearch analysis plugin powered by Rosette API</description>
     <distributionManagement>
