@@ -22,7 +22,7 @@
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>7.1.1.1-SNAPSHOT</version>
+        <version>7.2.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <dependencies>
