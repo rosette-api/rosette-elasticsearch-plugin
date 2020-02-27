@@ -74,7 +74,7 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
      * Performs processor specific modifications to the document.
      * @param inputText value of the field in the document that was specified as the input field to process
      * @param ingestDocument document to be ingested
-     * @throws Exception
+     * @throws Exception when something goes wrong
      */
     protected abstract void processDocument(String inputText, IngestDocument ingestDocument) throws Exception;
 }
