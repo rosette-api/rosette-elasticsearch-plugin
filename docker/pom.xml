@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-     Copyright 2019 Basis Technology Corp.
+     Copyright 2020 Basis Technology Corp.
  
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.29.0</version>
+                <version>${docker-maven-plugin.version}</version>
                 <configuration>
                     <showLogs>true</showLogs>
                     <verbose>true</verbose>

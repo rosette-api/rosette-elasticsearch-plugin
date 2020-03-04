@@ -1,5 +1,5 @@
 /*
-* Copyright 2017 Basis Technology Corp.
+* Copyright 2020 Basis Technology Corp.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
      * Performs processor specific modifications to the document.
      * @param inputText value of the field in the document that was specified as the input field to process
      * @param ingestDocument document to be ingested
-     * @throws Exception
+     * @throws Exception when something goes wrong
      */
     protected abstract void processDocument(String inputText, IngestDocument ingestDocument) throws Exception;
 }
