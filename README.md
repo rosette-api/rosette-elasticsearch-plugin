@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/rosette-api/rosette-elasticsearch-plugin.svg?branch=master)](https://travis-ci.org/rosette-api/rosette-elasticsearch-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rosette.elasticsearch/rosette-elasticsearch-plugin?color=green)](https://mvnrepository.com/artifact/com.rosette.elasticsearch/rosette-elasticsearch-plugin)
 
 Rosette Plugin for ElasticSearch
 ================================
