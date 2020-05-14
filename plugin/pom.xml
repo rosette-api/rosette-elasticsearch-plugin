@@ -21,7 +21,7 @@
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>7.6.2.1-SNAPSHOT</version>
+        <version>7.7.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <inceptionYear>2017</inceptionYear>
