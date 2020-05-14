@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 if [[ "$(tail -1 "$1" 2>/dev/null)" !=  "exit: 0" ]] ; then
+    echo "Printing curl output for debugging..."
+    cat "$1"
     echo "There are test failures. Exiting..."
     exit 1
 fi
