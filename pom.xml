@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-parent</artifactId>
-    <version>7.7.0.1-SNAPSHOT</version>
+    <version>7.7.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <artifactId>open-source-parent</artifactId>
@@ -47,7 +47,7 @@
         <bt.compile.target>${jdk.version}</bt.compile.target>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
-        <elasticsearch.version>7.7.0</elasticsearch.version>
+        <elasticsearch.version>7.7.1</elasticsearch.version>
         <log4j.version>2.13.0</log4j.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <rosette.api.binding.version>1.15.0</rosette.api.binding.version>
