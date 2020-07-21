@@ -2,8 +2,8 @@
 
 ## Overview
 Basis Technology has written a plugin for Elasticsearch as a means of calling the Rosette API endpoints at indexing time, to annotate unstructured textual fields in a document with text analytic results in separate “metadata” fields. This document enrichment from Rosette allows refinement of search results through these Rosette functions:
-- **Language identification** - tag the language of each document 
-- **Sentiment analysis** - tag the sentiment of each document or sentiment surrounding each entity (person, location, organization, etc.) 
+- **Language identification** - tag the language of each document
+- **Sentiment analysis** - tag the sentiment of each document or sentiment surrounding each entity (person, location, organization, etc.)
 - **Categorization** - tag each document with its primary topic (sports, home/garden, politics, etc.)
 - **Entity extraction and linking** - find the key entities in each document for faceted searching and link entities to Wikidata entries
 - **Name translation** - Translate names into English from 11 languages such as Arabic, Chinese, Korean, Japanese, and Russian.
@@ -21,16 +21,16 @@ The plugin uses semantic versioning. The first three numbers indicate the versio
 For example, 5.3.1.1 is the second patch version of the plugin for Elasticsearch 5.3.1.
 
 ### Installation
-1. Install Elasticsearch 
+1. Install Elasticsearch
 (Make sure the Elasticsearch version is compatible with the Document Enrichment Plugin or the plugin will not install.)
 
-2. Install the Rosette API plugin (where x.x.x.x stands for the version number) by navigating to the elasticsearch-x.x.x root directory and running the following. 
+2. Install the Rosette API plugin (where x.x.x.x stands for the version number) by navigating to the elasticsearch-x.x.x root directory and running the following.
 ```sh
 bin/elasticsearch-plugin install file:///path/to/rosette-elasticsearch-plugin-x.x.x.x.zip
 ```
 Use the absolute file path to refer to the plugin zip. You may be prompted to grant permissions necessary for the plugin to function. The Document Enrichment plugin is now in plugins/rosapi.
 
-3. Input your Rosette API key. If you don’t already have one, [sign up for a free or paid Rosette API plan](https://developer.rosette.com/signup), or for those who need greater speed or security, contact our sales team (sales@basistech.com) to learn about our on-premise version of Rosette API. You can set the key in one of two ways:
+3. Input your Rosette API key. If you don’t already have one, [sign up for a free trial or paid Rosette API plan](https://developer.rosette.com/signup), or for those who need greater speed or security, contact our sales team (sales@basistech.com) to learn about our on-premise version of Rosette API. You can set the key in one of two ways:
 * as an environment variable `export ROSETTE_API_KEY=<your key here>`
 * as an Elasticsearch setting `ingest.rosette.api_key: <your key here>` in the `config/elasticsearch.yml` file
 
@@ -42,7 +42,7 @@ Each Rosette function is implemented as an ingest processor, which is configured
 For example, here's a simple pipeline that runs language identification:
 * First create the pipeline:
 ```sh
-curl -XPUT localhost:9200/_ingest/pipeline/lang_id -d '
+curl -XPUT "http://localhost:9200/_ingest/pipeline/lang_id" -H 'Content-Type: application/json' -d '
 {
 "processors": [
     {
@@ -50,12 +50,12 @@ curl -XPUT localhost:9200/_ingest/pipeline/lang_id -d '
         { "field" : "text", "target_field" : "language" }
     }
             ]
-}
+}'
 ```
 * Then index a document with that pipeline:
 ```sh
-curl -XPOST localhost:9200/indexName/mappingName?pipeline=lang_id -d '
-{ "text" : "This is a document containing English text" }
+curl -XPOST "http://localhost:9200/indexname/mappingName?pipeline=lang_id" -H 'Content-Type: application/json' -d '
+{ "text" : "This is a document containing English text" }'
 ```
 See the [Elasticsearch Ingest configuration](https://www.elastic.co/guide/en/elasticsearch/reference/master/ingest.html) for more details.
 
@@ -97,7 +97,7 @@ Output:
 ### Entity Extraction, Linking, and Entity-Level Sentiment
 
 **Function:**
-Extracts entities (identifies 18 [entity types](https://developer.rosette.com/features-and-functions#-entity-types) in [20 languages](https://developer.rosette.com/features-and-functions#language-support24) from a body of text and stores them along with their QID (wikidata ID number) and entity type. 
+Extracts entities (identifies 18 [entity types](https://developer.rosette.com/features-and-functions#-entity-types) in [20 languages](https://developer.rosette.com/features-and-functions#language-support24) from a body of text and stores them along with their QID (wikidata ID number) and entity type.
 
 Optionally, Rosette can translate the entity mentions to English ([9 supported languages](https://developer.rosette.com/features-and-functions#language-support44)) and determine the sentiment (pos, neg, or neu) surrounding an entity.
 
@@ -216,7 +216,7 @@ target_field	| no	| ros_category	| Field to hold output ([output values](https:/
 ### Name Translation
 
 **Function:**
-Accepts a field that it assumes is a name (of a person, location, or organization) and translates the name to the target language. 
+Accepts a field that it assumes is a name (of a person, location, or organization) and translates the name to the target language.
 
 A name such as Ichiro Suzuki is of “language origin” Japanese, while the “script” is English, whereas 鈴木一郎 is of “language origin” Japanese and “script” Japanese.
 

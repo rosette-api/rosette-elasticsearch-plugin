@@ -7,6 +7,25 @@ set -x
 # the maven build continues and stops the docker image
 # the exit codes will be appended to the output file for later verification
 
+curl -fsSL -H 'Content-Type: application/json' -XPUT "$1:$2/_ingest/pipeline/my_pipeline" -d'
+{
+  "processors": [
+    {
+      "ros_language" : {
+        "field" : "text",
+        "target_field" : "language"
+      }
+    }
+  ]
+}
+' || ((code++))
+
+curl -fsSL -H 'Content-Type: application/json' -XPOST "$1:$2/indexname/mappingName?pipeline=my_pipeline&pretty" -d'
+{
+  "text" : "This is a document containing English text"
+}
+' || ((code++))
+
 curl -fsSL -H "Content-Type: application/json" -XPUT "$1:$2/_ingest/pipeline/rosapi?pretty" -d'
 {
   "processors": [
