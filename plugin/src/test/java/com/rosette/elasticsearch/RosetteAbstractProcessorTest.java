@@ -19,6 +19,7 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.RandomDocumentPicks;
 import org.elasticsearch.test.ESSingleNodeTestCase;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -47,7 +48,7 @@ public class RosetteAbstractProcessorTest extends ESSingleNodeTestCase {
         processor.execute(ingestDocument);
 
         //Nothing should get placed in the target field
-        assertThat("Processor should not process empty ingest field", ingestDocument.getSourceAndMetadata().get("target"), Matchers.nullValue());
+        MatcherAssert.assertThat("Processor should not process empty ingest field", ingestDocument.getSourceAndMetadata().get("target"), Matchers.nullValue());
     }
 
     @Test(expected = ElasticsearchException.class)

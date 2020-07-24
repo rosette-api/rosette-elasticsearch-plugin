@@ -20,6 +20,7 @@ import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.RandomDocumentPicks;
 import org.elasticsearch.test.ESSingleNodeTestCase;
 import org.hamcrest.Matchers;
+import org.hamcrest.MatcherAssert;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,11 +45,11 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
         assertFalse("Entity processor failed to return entities", ((List)source.get("entities")).isEmpty());
 
         Map entity = (Map)((List)source.get("entities")).get(0);
-        assertThat(entity.get("mention"), Matchers.equalTo("Dan Aykroyd"));
+        MatcherAssert.assertThat(entity.get("mention"), Matchers.equalTo("Dan Aykroyd"));
         //There shouldn't be any sentiment, translations, or offsets
-        assertThat(entity.get("sentiment"), Matchers.nullValue());
-        assertThat(entity.get("translation"), Matchers.nullValue());
-        assertThat(entity.get("offsets"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("sentiment"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("translation"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("offsets"), Matchers.nullValue());
     }
 
     public void testOffsets() throws Exception {
@@ -65,8 +66,8 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
         assertFalse("Entities are missing offsets", ((List)entity.get("offsets")).isEmpty());
         assertFalse("Entity offsets are empty", ((Map)((List)entity.get("offsets")).get(0)).isEmpty());
 
-        assertThat(entity.get("sentiment"), Matchers.nullValue());
-        assertThat(entity.get("translation"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("sentiment"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("translation"), Matchers.nullValue());
     }
 
     public void testSentiment() throws Exception {
@@ -80,10 +81,10 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
         Map<String, Object> source = ingestDocument.getSourceAndMetadata();
         assertFalse("Entity processor failed to return entities", ((List)source.get("entities")).isEmpty());
         Map entity = (Map)((List)source.get("entities")).get(0);
-        assertThat(entity.get("sentiment"), Matchers.anything());
+        MatcherAssert.assertThat(entity.get("sentiment"), Matchers.anything());
 
-        assertThat(entity.get("translation"), Matchers.nullValue());
-        assertThat(entity.get("offsets"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("translation"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("offsets"), Matchers.nullValue());
     }
 
     public void testTranslate() throws Exception {
@@ -97,9 +98,9 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
         Map<String, Object> source = ingestDocument.getSourceAndMetadata();
         assertFalse("Entity processor failed to return entities", ((List)source.get("entities")).isEmpty());
         Map entity = (Map)((List)source.get("entities")).get(0);
-        assertThat(entity.get("translation"), Matchers.anything());
+        MatcherAssert.assertThat(entity.get("translation"), Matchers.anything());
 
-        assertThat(entity.get("sentiment"), Matchers.nullValue());
-        assertThat(entity.get("offsets"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("sentiment"), Matchers.nullValue());
+        MatcherAssert.assertThat(entity.get("offsets"), Matchers.nullValue());
     }
 }

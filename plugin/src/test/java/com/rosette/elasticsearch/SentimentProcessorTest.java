@@ -18,6 +18,7 @@ package com.rosette.elasticsearch;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.RandomDocumentPicks;
 import org.elasticsearch.test.ESSingleNodeTestCase;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class SentimentProcessorTest extends ESSingleNodeTestCase {
         IngestDocument ingestDocument = RandomDocumentPicks.randomIngestDocument(random(), document);
         processor.execute(ingestDocument);
 
-        assertThat(ingestDocument.getSourceAndMetadata().get("text"), Matchers.equalTo(inputText));
-        assertThat(ingestDocument.getSourceAndMetadata().get("sentiment"), Matchers.equalTo("pos"));
+        MatcherAssert.assertThat(ingestDocument.getSourceAndMetadata().get("text"), Matchers.equalTo(inputText));
+        MatcherAssert.assertThat(ingestDocument.getSourceAndMetadata().get("sentiment"), Matchers.equalTo("pos"));
     }
 }
