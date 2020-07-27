@@ -335,10 +335,11 @@
                                     <include>com.basistech:common-api-jackson</include>
                                     <include>com.fasterxml.jackson.core:*</include>
                                 </includes>
-                                <excludes>
+                                <!-- This blob clears the shade plugin warning, but breaks the runtime classpath -->
+                                <!-- <excludes>
                                     <artifact>*:*</artifact>
                                     <exclude>META-INF/MANIFEST.MF</exclude>
-                                </excludes>
+                                </excludes> -->
                             </artifactSet>
                             <relocations>
                                 <relocation>
