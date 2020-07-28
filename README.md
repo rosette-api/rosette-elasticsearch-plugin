@@ -55,8 +55,3 @@ You can also [Test with Docker](docker/README.md)
 - [Rosette Platform Release Notes](https://support.rosette.com/hc/en-us/articles/360018354971-Release-Notes)
 - [Support](https://support.rosette.com)
 - [Plugin License: Apache 2.0](https://github.com/rosette-api/python/blob/develop/LICENSE.txt)
-
-
-
-
-
