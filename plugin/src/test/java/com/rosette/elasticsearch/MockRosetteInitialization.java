@@ -1,5 +1,5 @@
 /*
-* Copyright 2017 Basis Technology Corp.
+* Copyright 2020 Basis Technology Corp.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 package com.rosette.elasticsearch;
 
 import org.apache.http.HttpHeaders;
-import org.mockserver.client.server.MockServerClient;
-import org.mockserver.initialize.ExpectationInitializer;
+import org.mockserver.client.MockServerClient;
 import org.mockserver.model.Header;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.Parameter;
+import org.mockserver.client.initialize.PluginExpectationInitializer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 //Mock-server is launched before unit tests run and serves up a mocked json response for each endpoint
-public class MockRosetteInitialization implements ExpectationInitializer {
+public class MockRosetteInitialization implements PluginExpectationInitializer {
 
     @Override
     public void initializeExpectations(MockServerClient mockServerClient) {

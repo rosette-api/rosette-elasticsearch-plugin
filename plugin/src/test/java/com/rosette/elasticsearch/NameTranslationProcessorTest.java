@@ -1,5 +1,5 @@
 /*
-* Copyright 2017 Basis Technology Corp.
+* Copyright 2020 Basis Technology Corp.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.basistech.util.LanguageCode;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.RandomDocumentPicks;
 import org.elasticsearch.test.ESSingleNodeTestCase;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class NameTranslationProcessorTest extends ESSingleNodeTestCase {
         IngestDocument ingestDocument = RandomDocumentPicks.randomIngestDocument(random(), document);
         processor.execute(ingestDocument);
 
-        assertThat(ingestDocument.getSourceAndMetadata().get("text"), Matchers.equalTo(inputText));
-        assertThat(ingestDocument.getSourceAndMetadata().get("translation"), Matchers.equalTo("Vladimir Putin"));
+        MatcherAssert.assertThat(ingestDocument.getSourceAndMetadata().get("text"), Matchers.equalTo(inputText));
+        MatcherAssert.assertThat(ingestDocument.getSourceAndMetadata().get("translation"), Matchers.equalTo("Vladimir Putin"));
     }
 }
