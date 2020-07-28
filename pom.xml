@@ -33,7 +33,7 @@
         <developerConnection>scm:git:git@github.com:rosette-api/rosette-elasticsearch-plugin.git</developerConnection>
         <tag>7.6.1.0</tag>
     </scm>
-    <description>ElasticSearch plugin parent</description>
+    <description>Elasticsearch plugin parent</description>
     <distributionManagement>
         <site>
             <id>site</id>

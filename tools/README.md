@@ -1,5 +1,4 @@
-Releasing the Elasticsearch plugin
-==================================
+# Releasing the Elasticsearch plugin
 
 ## Requirements
 

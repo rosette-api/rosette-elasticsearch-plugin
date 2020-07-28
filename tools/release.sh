@@ -16,7 +16,7 @@ echo "* Set versions so they will be incremented correctly."
 echo "**"
 mvn versions:update-property -Dproperty=elasticsearch.version -DnewVersion=[${ELASTIC_VERSION}] -DallowDowngrade  -DgenerateBackupPoms=false
 mvn versions:set -DnewVersion=${ELASTIC_VERSION}.0-SNAPSHOT -DgenerateBackupPoms=false
-git commit -a -m "Auto-update ElasticSearch to ${ELASTIC_VERSION}"
+git commit -a -m "Auto-update Elasticsearch to ${ELASTIC_VERSION}"
 
 echo "**"
 echo "* First running mvn release:prepare release:perform"

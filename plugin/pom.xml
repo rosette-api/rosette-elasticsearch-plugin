@@ -31,7 +31,7 @@
         <developerConnection>scm:git:git@github.com:rosette-api/${project.artifactId}.git</developerConnection>
         <tag>7.6.1.0</tag>
     </scm>
-    <description>ElasticSearch analysis plugin powered by Rosette API</description>
+    <description>Elasticsearch analysis plugin powered by Rosette API</description>
     <distributionManagement>
         <site>
             <id>site</id>

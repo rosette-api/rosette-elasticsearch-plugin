@@ -1,12 +1,15 @@
-[![Build Status](https://travis-ci.org/rosette-api/rosette-elasticsearch-plugin.svg?branch=master)](https://travis-ci.org/rosette-api/rosette-elasticsearch-plugin)
-[![Maven Central](https://img.shields.io/maven-central/v/com.rosette.elasticsearch/rosette-elasticsearch-plugin?color=green)](https://mvnrepository.com/artifact/com.rosette.elasticsearch/rosette-elasticsearch-plugin)
+<a href="https://www.rosette.com"><img src="https://s3.amazonaws.com/styleguide.basistech.com/logos/rosette-logo.png" width="181" height="47" /></a>
 
-Rosette Plugin for ElasticSearch
-================================
+---
+
+[![Build Status](https://travis-ci.org/rosette-api/rosette-elasticsearch-plugin.svg?branch=master)](https://travis-ci.org/rosette-api/rosette-elasticsearch-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rosette.elasticsearch/rosette-elasticsearch-plugin?color=blue)](https://mvnrepository.com/artifact/com.rosette.elasticsearch/rosette-elasticsearch-plugin)
+
+# Rosette Plugin for Elasticsearch
 
 A Document Enrichment plugin that brings the Rosette API to Elasticsearch.
 
-This Ingest plugin allows Elasticsearch users to perform Language Identification, Sentiment Analysis, Entity Extraction,
+This ingest plugin allows Elasticsearch users to perform Language Identification, Sentiment Analysis, Entity Extraction,
 Categorization, and Name Translation on documents as they're indexed.
 
 ## Rosette API
