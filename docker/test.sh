@@ -20,6 +20,7 @@ curl -fsSL -H 'Content-Type: application/json' -XPUT "$1:$2/_ingest/pipeline/my_
   ]
 }
 ' || ((code++))
+echo
 echo "After command ${command_counter} our error code count is ${code}."
 command_counter=$((command_counter + 1))
 
@@ -193,7 +194,6 @@ curl -fsSL -H "Content-Type: application/json" -XPOST "$1:$2/test_idx/_search?pr
 }
 ' || ((code++))
 echo "After command ${command_counter} our error code count is ${code}."
-command_counter=$((command_counter + 1))
 
 set +x
 echo "exit: $code"
