@@ -1,5 +1,5 @@
 /*
-* Copyright 2017 Basis Technology Corp.
+* Copyright 2020 Basis Technology Corp.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.elasticsearch.plugins.PluginInfo;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.test.ESIntegTestCase;
 import org.elasticsearch.test.hamcrest.ElasticsearchAssertions;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 
 import java.io.BufferedReader;
@@ -82,7 +83,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "language");
 
         //Check the source for the expected language
-        assertThat(response.getHits().getAt(0).getSourceAsMap().get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
     }
 
     public void testCategories() throws Exception {
@@ -92,7 +93,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "categories");
 
         //Check the source for the expected category
-        assertThat(response.getHits().getAt(0).getSourceAsMap().get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("SPORTS"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("SPORTS"));
     }
 
     public void testSentiment() throws Exception {
@@ -102,7 +103,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "sentiment");
 
         //Check the source for the expected sentiment
-        assertThat(response.getHits().getAt(0).getSourceAsMap().get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
     }
 
     public void testTranslateToEnglish() throws Exception {
@@ -112,7 +113,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "translate_eng");
 
         //Check the source for the expected English translation
-        assertThat(response.getHits().getAt(0).getSourceAsMap().get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("Vladimir Putin"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("Vladimir Putin"));
     }
 
     public void testTranslateFromEnglish() throws Exception {
@@ -121,7 +122,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "translate_rus");
 
         //Check the source for the expected Russian translation
-        assertThat(response.getHits().getAt(0).getSourceAsMap().get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("Владимир Путин"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("Владимир Путин"));
     }
 
     public void testEntities() throws Exception {
@@ -133,7 +134,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         //Check the source for the expected entity result
         assertFalse(((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
         Map entity = (Map)((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
-        assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
+        MatcherAssert.assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
     }
 
     public void testEntitiesWithSentiment() throws Exception {
@@ -145,8 +146,8 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         //Check the source for the expected entity level sentiment
         assertFalse(((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
         Map entity = (Map)((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
-        assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
-        assertThat(entity.get("sentiment"), Matchers.equalTo("neu"));
+        MatcherAssert.assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
+        MatcherAssert.assertThat(entity.get("sentiment"), Matchers.equalTo("neu"));
     }
 
     //Test that all (or most) of the processors work together
@@ -158,13 +159,13 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
 
         //Check the source for the expected entity result
         Map<String, Object> source = response.getHits().getAt(0).getSourceAsMap();
-        assertThat(source.get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
-        assertThat(source.get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("ARTS_AND_ENTERTAINMENT"));
-        assertThat(source.get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
+        MatcherAssert.assertThat(source.get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
+        MatcherAssert.assertThat(source.get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("ARTS_AND_ENTERTAINMENT"));
+        MatcherAssert.assertThat(source.get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
 
         assertFalse(((List)source.get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
         Map entity = (Map)((List)source.get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
-        assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
+        MatcherAssert.assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
     }
 
     private SearchResponse exercisePipeline(String inputText, String pipelineName) throws IOException {
