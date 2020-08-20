@@ -31,8 +31,8 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
     protected RosetteApiWrapper rosAPI;
     protected final String type;
 
-    RosetteAbstractProcessor(RosetteApiWrapper rosAPI, String tag, String processorType, String inputField, String targetField) {
-        super(tag);
+    RosetteAbstractProcessor(RosetteApiWrapper rosAPI, String tag, String description, String processorType, String inputField, String targetField) {
+        super(tag, description);
         this.inputField = inputField;
         this.targetField = targetField;
         this.rosAPI = rosAPI;
