@@ -30,7 +30,8 @@ public class CategoriesProcessorTest extends ESSingleNodeTestCase {
         CategoriesProcessor processor = new CategoriesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
                 "description", "text", "category");
 
-        String inputText = "The people played lots of sports like soccer and hockey. The score was very high. Touchdown!";
+        String inputText = "The people played lots of sports like soccer and hockey. The score was very high. "
+                + "Touchdown!";
 
         Map<String, Object> document = new HashMap<>();
         document.put("text", inputText);

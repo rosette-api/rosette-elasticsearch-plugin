@@ -53,7 +53,8 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
     private boolean doSentiment;
 
     EntitiesProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField,
-                      boolean includeOffsets, boolean doTranslate, LanguageCode translateLanguage, boolean doSentiment) {
+                      boolean includeOffsets, boolean doTranslate, LanguageCode translateLanguage,
+                      boolean doSentiment) {
         super(rosAPI, tag, description, TYPE, inputField, targetField);
         this.includeOffsets = includeOffsets;
         this.doTranslate = doTranslate;
@@ -70,13 +71,15 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
         try {
             //SENTIMENT
             if (doSentiment) {
-                DocumentRequest<SentimentOptions> sentrequest = DocumentRequest.<SentimentOptions>builder().content(inputText).build();
+                DocumentRequest<SentimentOptions> sentrequest = DocumentRequest.<SentimentOptions>builder()
+                        .content(inputText).build();
                 adm = AccessController.doPrivileged((PrivilegedAction<AnnotatedText>) () ->
                         rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.SENTIMENT_SERVICE_PATH, sentrequest)
                 );
             } else {
                 //REX
-                DocumentRequest<EntitiesOptions> entityrequest = DocumentRequest.<EntitiesOptions>builder().content(inputText).build();
+                DocumentRequest<EntitiesOptions> entityrequest = DocumentRequest.<EntitiesOptions>builder()
+                        .content(inputText).build();
                 adm = AccessController.doPrivileged((PrivilegedAction<AnnotatedText>) () ->
                         rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.ENTITIES_SERVICE_PATH, entityrequest)
                 );
@@ -86,7 +89,8 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
             throw new ElasticsearchException(ex.getErrorResponse().getMessage(), ex);
         }
 
-        List<Map<String, Object>> entities = adm.getEntities().stream().map(this::processEntity).collect(Collectors.toList());
+        List<Map<String, Object>> entities = adm.getEntities().stream().map(this::processEntity)
+                .collect(Collectors.toList());
 
         ingestDocument.setFieldValue(targetField, entities);
     }
@@ -101,12 +105,19 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
         @Override
         public Processor create(Map<String, Processor.Factory> registry, String processorTag,
                                 String processorDescription, Map<String, Object> config) throws Exception {
+
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
-            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
-            boolean includeOffsets = ConfigurationUtils.readBooleanProperty(TYPE, processorTag, config, Parameters.OFFSETS.name, Boolean.parseBoolean(Parameters.OFFSETS.defaultValue));
-            boolean doTranslate = ConfigurationUtils.readBooleanProperty(TYPE, processorTag, config, Parameters.TRANSLATE.name, Boolean.parseBoolean(Parameters.TRANSLATE.defaultValue));
-            LanguageCode translateLanguage = LanguageCode.lookupByISO639(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TRANSLATE_LANGUAGE.name, Parameters.TRANSLATE_LANGUAGE.defaultValue));
-            boolean doSentiment = ConfigurationUtils.readBooleanProperty(TYPE, processorTag, config, Parameters.SENTIMENT.name, Boolean.parseBoolean(Parameters.SENTIMENT.defaultValue));
+            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config,
+                    Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
+            boolean includeOffsets = ConfigurationUtils.readBooleanProperty(TYPE, processorTag, config,
+                    Parameters.OFFSETS.name, Boolean.parseBoolean(Parameters.OFFSETS.defaultValue));
+            boolean doTranslate = ConfigurationUtils.readBooleanProperty(TYPE, processorTag, config,
+                    Parameters.TRANSLATE.name, Boolean.parseBoolean(Parameters.TRANSLATE.defaultValue));
+            LanguageCode translateLanguage = LanguageCode.lookupByISO639(ConfigurationUtils
+                    .readStringProperty(TYPE, processorTag, config,
+                            Parameters.TRANSLATE_LANGUAGE.name, Parameters.TRANSLATE_LANGUAGE.defaultValue));
+            boolean doSentiment = ConfigurationUtils.readBooleanProperty(TYPE, processorTag, config,
+                    Parameters.SENTIMENT.name, Boolean.parseBoolean(Parameters.SENTIMENT.defaultValue));
 
             return new EntitiesProcessor(rosAPI, processorTag, processorDescription, inputField, targetField,
                     includeOffsets, doTranslate, translateLanguage, doSentiment);
@@ -140,13 +151,20 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
 
         //RNT
         if (doTranslate
-                && (type.equalsIgnoreCase("PERSON") || type.equalsIgnoreCase("LOCATION") || type.equalsIgnoreCase("ORGANIZATION"))) {
-            NameTranslationRequest rntrequest = NameTranslationRequest.builder().name(headMention).targetLanguage(translateLanguage).entityType(type).build();
+                && (type.equalsIgnoreCase("PERSON")
+                || type.equalsIgnoreCase("LOCATION")
+                || type.equalsIgnoreCase("ORGANIZATION"))) {
+            NameTranslationRequest rntrequest = NameTranslationRequest.builder()
+                    .name(headMention)
+                    .targetLanguage(translateLanguage)
+                    .entityType(type)
+                    .build();
 
             NameTranslationResponse rntresponse;
             try {
                 rntresponse = AccessController.doPrivileged((PrivilegedAction<NameTranslationResponse>) () ->
-                        rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.NAME_TRANSLATION_SERVICE_PATH, rntrequest, NameTranslationResponse.class)
+                        rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.NAME_TRANSLATION_SERVICE_PATH, rntrequest,
+                                NameTranslationResponse.class)
                 );
             } catch (HttpRosetteAPIException ex) {
                 LOGGER.error(ex.getErrorResponse().getMessage());

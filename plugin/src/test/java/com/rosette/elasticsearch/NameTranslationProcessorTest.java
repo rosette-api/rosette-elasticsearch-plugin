@@ -42,6 +42,7 @@ public class NameTranslationProcessorTest extends ESSingleNodeTestCase {
         processor.execute(ingestDocument);
 
         MatcherAssert.assertThat(ingestDocument.getSourceAndMetadata().get("text"), Matchers.equalTo(inputText));
-        MatcherAssert.assertThat(ingestDocument.getSourceAndMetadata().get("translation"), Matchers.equalTo("Vladimir Putin"));
+        MatcherAssert.assertThat(ingestDocument.getSourceAndMetadata().get("translation"),
+                Matchers.equalTo("Vladimir Putin"));
     }
 }

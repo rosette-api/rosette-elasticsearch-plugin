@@ -49,7 +49,8 @@ public class RosetteAbstractProcessorTest extends ESSingleNodeTestCase {
         processor.execute(ingestDocument);
 
         //Nothing should get placed in the target field
-        MatcherAssert.assertThat("Processor should not process empty ingest field", ingestDocument.getSourceAndMetadata().get("target"), Matchers.nullValue());
+        MatcherAssert.assertThat("Processor should not process empty ingest field",
+                ingestDocument.getSourceAndMetadata().get("target"), Matchers.nullValue());
     }
 
     @Test(expected = ElasticsearchException.class)

@@ -36,7 +36,8 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_name_translation";
 
-    private static final Logger LOGGER = Loggers.getLogger(NameTranslationProcessor.class, NameTranslationProcessor.class.getName());
+    private static final Logger LOGGER = Loggers
+            .getLogger(NameTranslationProcessor.class, NameTranslationProcessor.class.getName());
 
     private LanguageCode targetLanguage;
     private ISO15924 targetScript;
@@ -45,8 +46,8 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
     private ISO15924 sourceScript;
     private LanguageCode sourceOrigin;
 
-    NameTranslationProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField,
-                             LanguageCode targetLanguage, ISO15924 targetScript, String entityType,
+    NameTranslationProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField,
+                             String targetField, LanguageCode targetLanguage, ISO15924 targetScript, String entityType,
                              LanguageCode sourceLanguage, ISO15924 sourceScript, LanguageCode sourceOrigin) {
         super(rosAPI, tag, description, TYPE, inputField, targetField);
         this.targetLanguage = targetLanguage;
@@ -73,7 +74,8 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
         try {
             // RosApi client binding's Jackson needs elevated privilege
             response = AccessController.doPrivileged((PrivilegedAction<NameTranslationResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.NAME_TRANSLATION_SERVICE_PATH, request, NameTranslationResponse.class)
+                    rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.NAME_TRANSLATION_SERVICE_PATH, request,
+                            NameTranslationResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {
             LOGGER.error(ex.getErrorResponse().getMessage());
@@ -91,17 +93,30 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
         }
 
         @Override
-        public Processor create(Map<String, Processor.Factory> registry, String processorTag, String processorDescription,
-                                Map<String, Object> config) throws Exception {
-            String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
-            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
-            LanguageCode targetLanguage = LanguageCode.lookupByISO639(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_LANGUAGE.name, Parameters.TARGET_LANGUAGE.defaultValue));
-            ISO15924 targetScript = ISO15924.lookupByCode4(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_SCRIPT.name, Parameters.TARGET_SCRIPT.defaultValue));
-            String entityType = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.ENTITY_TYPE.name, Parameters.ENTITY_TYPE.defaultValue);
+        public Processor create(Map<String, Processor.Factory> registry, String processorTag,
+                                String processorDescription, Map<String, Object> config) throws Exception {
 
-            LanguageCode sourceLanguage = LanguageCode.lookupByISO639(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.SOURCE_LANGUAGE.name, Parameters.SOURCE_LANGUAGE.defaultValue));
-            ISO15924 sourceScript = ISO15924.lookupByCode4(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.SOURCE_SCRIPT.name, Parameters.SOURCE_SCRIPT.defaultValue));
-            LanguageCode sourceOrigin = LanguageCode.lookupByISO639(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.SOURCE_LANGUAGE_ORIGIN.name, Parameters.SOURCE_LANGUAGE_ORIGIN.defaultValue));
+            String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
+            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config,
+                    Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
+            LanguageCode targetLanguage = LanguageCode.lookupByISO639(ConfigurationUtils
+                    .readStringProperty(TYPE, processorTag, config,
+                            Parameters.TARGET_LANGUAGE.name, Parameters.TARGET_LANGUAGE.defaultValue));
+            ISO15924 targetScript = ISO15924.lookupByCode4(ConfigurationUtils
+                    .readStringProperty(TYPE, processorTag, config,
+                            Parameters.TARGET_SCRIPT.name, Parameters.TARGET_SCRIPT.defaultValue));
+            String entityType = ConfigurationUtils.readStringProperty(TYPE, processorTag, config,
+                    Parameters.ENTITY_TYPE.name, Parameters.ENTITY_TYPE.defaultValue);
+
+            LanguageCode sourceLanguage = LanguageCode.lookupByISO639(ConfigurationUtils
+                    .readStringProperty(TYPE, processorTag, config,
+                            Parameters.SOURCE_LANGUAGE.name, Parameters.SOURCE_LANGUAGE.defaultValue));
+            ISO15924 sourceScript = ISO15924.lookupByCode4(ConfigurationUtils
+                    .readStringProperty(TYPE, processorTag, config,
+                            Parameters.SOURCE_SCRIPT.name, Parameters.SOURCE_SCRIPT.defaultValue));
+            LanguageCode sourceOrigin = LanguageCode.lookupByISO639(ConfigurationUtils
+                    .readStringProperty(TYPE, processorTag, config,
+                            Parameters.SOURCE_LANGUAGE_ORIGIN.name, Parameters.SOURCE_LANGUAGE_ORIGIN.defaultValue));
 
             return new NameTranslationProcessor(rosAPI, processorTag, processorDescription, inputField, targetField,
                     targetLanguage, targetScript, entityType, sourceLanguage, sourceScript, sourceOrigin);

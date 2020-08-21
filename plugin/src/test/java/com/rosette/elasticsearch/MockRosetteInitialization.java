@@ -47,7 +47,8 @@ public class MockRosetteInitialization implements PluginExpectationInitializer {
     }
 
     private void addEndpoint(String baseURL, String endpointName, MockServerClient mockServerClient) {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("mock_responses/" + endpointName + "_response.json")) {
+        try (InputStream is = getClass().getClassLoader()
+                .getResourceAsStream("mock_responses/" + endpointName + "_response.json")) {
             String response = getStringFromResource(is);
             mockServerClient.when(HttpRequest.request()
                     .withMethod("POST")
@@ -64,7 +65,8 @@ public class MockRosetteInitialization implements PluginExpectationInitializer {
     }
 
     private void addSentimentADM(String baseURL, MockServerClient mockServerClient) {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("mock_responses/sentiment_adm_response.json")) {
+        try (InputStream is = getClass().getClassLoader()
+                .getResourceAsStream("mock_responses/sentiment_adm_response.json")) {
             String response = getStringFromResource(is);
             mockServerClient.when(HttpRequest.request()
                     .withMethod("POST")
