@@ -196,4 +196,10 @@ curl -fsSL -H "Content-Type: application/json" -XPOST "$1:$2/test_idx/_search?pr
 echo "After command ${command_counter} our error code count is ${code}."
 
 set +x
+# The way we check to see if test.sh succeeded is to read in the output
+# in verify.sh.  We then check the last line of the output file and
+# based on the last line, decide if the test was successful.  This
+# mechanism fails sporadically, and I suspect it is caused by a buffering
+# issue.  Perhaps a brief snooze will make it more reliable.
+sleep 2
 echo "exit: $code"
