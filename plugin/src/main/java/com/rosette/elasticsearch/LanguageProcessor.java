@@ -37,8 +37,8 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
 
     private static final Logger LOGGER = Loggers.getLogger(LanguageProcessor.class, LanguageProcessor.class.getName());
 
-    LanguageProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField) {
-        super(rosAPI, tag, TYPE, inputField, targetField);
+    LanguageProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField) {
+        super(rosAPI, tag, description, TYPE, inputField, targetField);
     }
 
     @Override
@@ -74,10 +74,11 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
         }
 
         @Override
-        public Processor create(Map<String, Processor.Factory> registry, String processorTag, Map<String, Object> config) throws Exception {
+        public Processor create(Map<String, Processor.Factory> registry, String processorTag, String processorDescription,
+                                Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
             String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
-            return new LanguageProcessor(rosAPI, processorTag, inputField, targetField);
+            return new LanguageProcessor(rosAPI, processorTag, processorDescription, inputField, targetField);
         }
     }
 

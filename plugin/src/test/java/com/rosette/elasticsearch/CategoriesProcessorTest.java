@@ -27,7 +27,8 @@ import java.util.Map;
 public class CategoriesProcessorTest extends ESSingleNodeTestCase {
 
     public void testCategories() throws Exception {
-        CategoriesProcessor processor = new CategoriesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "category");
+        CategoriesProcessor processor = new CategoriesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
+                "description", "text", "category");
 
         String inputText = "The people played lots of sports like soccer and hockey. The score was very high. Touchdown!";
 

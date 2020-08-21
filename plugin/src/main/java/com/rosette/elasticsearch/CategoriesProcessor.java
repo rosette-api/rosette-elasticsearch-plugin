@@ -36,8 +36,8 @@ public class CategoriesProcessor extends RosetteAbstractProcessor {
     public static final String TYPE = "ros_categories";
     private static final Logger LOGGER = Loggers.getLogger(CategoriesProcessor.class, CategoriesProcessor.class.getName());
 
-    CategoriesProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField) {
-        super(rosAPI, tag, TYPE, inputField, targetField);
+    CategoriesProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField) {
+        super(rosAPI, tag, description, TYPE, inputField, targetField);
     }
 
     @Override
@@ -73,10 +73,11 @@ public class CategoriesProcessor extends RosetteAbstractProcessor {
         }
 
         @Override
-        public Processor create(Map<String, Processor.Factory> registry, String processorTag, Map<String, Object> config) throws Exception {
+        public Processor create(Map<String, Processor.Factory> registry, String processorTag,
+                                String processorDescription, Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
             String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
-            return new CategoriesProcessor(rosAPI, processorTag, inputField, targetField);
+            return new CategoriesProcessor(rosAPI, processorTag, processorDescription, inputField, targetField);
         }
     }
 

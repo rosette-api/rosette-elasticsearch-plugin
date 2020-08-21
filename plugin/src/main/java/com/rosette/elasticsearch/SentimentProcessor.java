@@ -38,8 +38,8 @@ public class SentimentProcessor extends RosetteAbstractProcessor {
 
     private static final Logger LOGGER = Loggers.getLogger(SentimentProcessor.class, SentimentProcessor.class.getName());
 
-    SentimentProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField) {
-        super(rosAPI, tag, TYPE, inputField, targetField);
+    SentimentProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField) {
+        super(rosAPI, tag, description, TYPE, inputField, targetField);
     }
 
     @Override
@@ -73,10 +73,11 @@ public class SentimentProcessor extends RosetteAbstractProcessor {
         }
 
         @Override
-        public Processor create(Map<String, Processor.Factory> registry, String processorTag, Map<String, Object> config) throws Exception {
+        public Processor create(Map<String, Processor.Factory> registry, String processorTag,
+                                String processorDescription, Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
             String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
-            return new SentimentProcessor(rosAPI, processorTag, inputField, targetField);
+            return new SentimentProcessor(rosAPI, processorTag, processorDescription, inputField, targetField);
         }
     }
 

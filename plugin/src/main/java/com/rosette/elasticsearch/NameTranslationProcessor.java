@@ -45,10 +45,10 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
     private ISO15924 sourceScript;
     private LanguageCode sourceOrigin;
 
-    NameTranslationProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField,
+    NameTranslationProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField,
                              LanguageCode targetLanguage, ISO15924 targetScript, String entityType,
                              LanguageCode sourceLanguage, ISO15924 sourceScript, LanguageCode sourceOrigin) {
-        super(rosAPI, tag, TYPE, inputField, targetField);
+        super(rosAPI, tag, description, TYPE, inputField, targetField);
         this.targetLanguage = targetLanguage;
         this.targetScript = targetScript;
         this.entityType = entityType;
@@ -91,7 +91,8 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
         }
 
         @Override
-        public Processor create(Map<String, Processor.Factory> registry, String processorTag, Map<String, Object> config) throws Exception {
+        public Processor create(Map<String, Processor.Factory> registry, String processorTag, String processorDescription,
+                                Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
             String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
             LanguageCode targetLanguage = LanguageCode.lookupByISO639(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_LANGUAGE.name, Parameters.TARGET_LANGUAGE.defaultValue));
@@ -102,7 +103,8 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
             ISO15924 sourceScript = ISO15924.lookupByCode4(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.SOURCE_SCRIPT.name, Parameters.SOURCE_SCRIPT.defaultValue));
             LanguageCode sourceOrigin = LanguageCode.lookupByISO639(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.SOURCE_LANGUAGE_ORIGIN.name, Parameters.SOURCE_LANGUAGE_ORIGIN.defaultValue));
 
-            return new NameTranslationProcessor(rosAPI, processorTag, inputField, targetField, targetLanguage, targetScript, entityType, sourceLanguage, sourceScript, sourceOrigin);
+            return new NameTranslationProcessor(rosAPI, processorTag, processorDescription, inputField, targetField,
+                    targetLanguage, targetScript, entityType, sourceLanguage, sourceScript, sourceOrigin);
         }
     }
 
