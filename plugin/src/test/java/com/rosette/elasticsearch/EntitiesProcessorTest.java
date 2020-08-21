@@ -34,7 +34,9 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
             + "magnificent women in comedy.";
 
     public void testEntities() throws Exception {
-        EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "entities", false, false, LanguageCode.ENGLISH, false);
+        EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
+                "description", "text", "entities", false, false,
+                LanguageCode.ENGLISH, false);
 
         Map<String, Object> document = new HashMap<>();
         document.put("text", INPUTTEXT);
@@ -53,7 +55,9 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
     }
 
     public void testOffsets() throws Exception {
-        EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "entities", true, false, LanguageCode.ENGLISH, false);
+        EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
+                "description", "text", "entities", true, false,
+                LanguageCode.ENGLISH, false);
 
         Map<String, Object> document = new HashMap<>();
         document.put("text", INPUTTEXT);
@@ -71,7 +75,9 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
     }
 
     public void testSentiment() throws Exception {
-        EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "entities", false, false, LanguageCode.ENGLISH, true);
+        EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
+                "description", "text", "entities", false, false,
+                LanguageCode.ENGLISH, true);
 
         Map<String, Object> document = new HashMap<>();
         document.put("text", INPUTTEXT);
@@ -88,7 +94,9 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
     }
 
     public void testTranslate() throws Exception {
-        EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10), "text", "entities", false, true, LanguageCode.KOREAN, false);
+        EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
+                "description", "text", "entities", false, true,
+                LanguageCode.KOREAN, false);
 
         Map<String, Object> document = new HashMap<>();
         document.put("text", INPUTTEXT);

@@ -52,8 +52,9 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
     private LanguageCode translateLanguage;
     private boolean doSentiment;
 
-    EntitiesProcessor(RosetteApiWrapper rosAPI, String tag, String inputField, String targetField, boolean includeOffsets, boolean doTranslate, LanguageCode translateLanguage, boolean doSentiment) {
-        super(rosAPI, tag, TYPE, inputField, targetField);
+    EntitiesProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField,
+                      boolean includeOffsets, boolean doTranslate, LanguageCode translateLanguage, boolean doSentiment) {
+        super(rosAPI, tag, description, TYPE, inputField, targetField);
         this.includeOffsets = includeOffsets;
         this.doTranslate = doTranslate;
         this.translateLanguage = translateLanguage;
@@ -98,7 +99,8 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
         }
 
         @Override
-        public Processor create(Map<String, Processor.Factory> registry, String processorTag, Map<String, Object> config) throws Exception {
+        public Processor create(Map<String, Processor.Factory> registry, String processorTag,
+                                String processorDescription, Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
             String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
             boolean includeOffsets = ConfigurationUtils.readBooleanProperty(TYPE, processorTag, config, Parameters.OFFSETS.name, Boolean.parseBoolean(Parameters.OFFSETS.defaultValue));
@@ -106,7 +108,8 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
             LanguageCode translateLanguage = LanguageCode.lookupByISO639(ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TRANSLATE_LANGUAGE.name, Parameters.TRANSLATE_LANGUAGE.defaultValue));
             boolean doSentiment = ConfigurationUtils.readBooleanProperty(TYPE, processorTag, config, Parameters.SENTIMENT.name, Boolean.parseBoolean(Parameters.SENTIMENT.defaultValue));
 
-            return new EntitiesProcessor(rosAPI, processorTag, inputField, targetField, includeOffsets, doTranslate, translateLanguage, doSentiment);
+            return new EntitiesProcessor(rosAPI, processorTag, processorDescription, inputField, targetField,
+                    includeOffsets, doTranslate, translateLanguage, doSentiment);
         }
     }
 
