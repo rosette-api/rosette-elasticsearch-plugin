@@ -44,12 +44,14 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
     @Override
     public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /language endpoint and set the result in the field
-        DocumentRequest<LanguageOptions> request = DocumentRequest.<LanguageOptions>builder().content(inputText).build();
+        DocumentRequest<LanguageOptions> request = DocumentRequest.<LanguageOptions>builder()
+                .content(inputText).build();
         LanguageResponse response;
         try {
             // RosApi client binding's Jackson needs elevated privilege
             response = AccessController.doPrivileged((PrivilegedAction<LanguageResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.LANGUAGE_SERVICE_PATH, request, LanguageResponse.class)
+                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.LANGUAGE_SERVICE_PATH, request,
+                            LanguageResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {
             LOGGER.error(ex.getErrorResponse().getMessage());
@@ -74,10 +76,11 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
         }
 
         @Override
-        public Processor create(Map<String, Processor.Factory> registry, String processorTag, String processorDescription,
-                                Map<String, Object> config) throws Exception {
+        public Processor create(Map<String, Processor.Factory> registry, String processorTag,
+                                String processorDescription, Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
-            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
+            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config,
+                    Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
             return new LanguageProcessor(rosAPI, processorTag, processorDescription, inputField, targetField);
         }
     }

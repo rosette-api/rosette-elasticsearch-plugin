@@ -35,9 +35,11 @@ public final class RosetteApiWrapper {
     static {
         Properties props = new Properties();
         String appHeader = "";
-        try (InputStream ins = RosetteApiWrapper.class.getClassLoader().getResourceAsStream("plugin-descriptor.properties")) {
+        try (InputStream ins = RosetteApiWrapper.class.getClassLoader()
+                .getResourceAsStream("plugin-descriptor.properties")) {
             props.load(ins);
-            String pluginName = props.getProperty("classname").substring(props.getProperty("classname").lastIndexOf('.') + 1);
+            String pluginName = props.getProperty("classname")
+                    .substring(props.getProperty("classname").lastIndexOf('.') + 1);
             String pluginVersion = props.getProperty("version");
             String elasticVersion = props.getProperty("elasticsearch.version");
             appHeader = String.format("%s-%s/ElasticSearch-%s", pluginName, pluginVersion, elasticVersion);
@@ -64,8 +66,11 @@ public final class RosetteApiWrapper {
             altUrl = System.getenv("ROSETTE_API_URL");
         }
 
-        if ((HttpRosetteAPI.DEFAULT_URL_BASE.equalsIgnoreCase(altUrl) || Strings.isNullOrEmpty(altUrl)) && Strings.isNullOrEmpty(apiKey)) {
-            throw new ElasticsearchException("Rosette plugin requires setting an API Key either via the '" + RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey() + "' setting, or the 'ROSETTE_API_KEY' environment variable.");
+        if ((HttpRosetteAPI.DEFAULT_URL_BASE.equalsIgnoreCase(altUrl) || Strings.isNullOrEmpty(altUrl))
+                && Strings.isNullOrEmpty(apiKey)) {
+            throw new ElasticsearchException("Rosette plugin requires setting an API Key either via the '"
+                    + RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey()
+                    + "' setting, or the 'ROSETTE_API_KEY' environment variable.");
         }
 
         HttpRosetteAPI.Builder clientBuilder = new HttpRosetteAPI.Builder();

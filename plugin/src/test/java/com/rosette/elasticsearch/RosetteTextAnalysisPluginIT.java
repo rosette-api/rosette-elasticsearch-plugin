@@ -62,7 +62,8 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
     }
 
     public void testPluginIsLoaded() throws Exception {
-        NodesInfoResponse response = client().admin().cluster().prepareNodesInfo().addMetric(NodesInfoRequest.Metric.PLUGINS.metricName()).get();
+        NodesInfoResponse response = client().admin().cluster().prepareNodesInfo()
+                .addMetric(NodesInfoRequest.Metric.PLUGINS.metricName()).get();
         for (NodeInfo nodeInfo : response.getNodes()) {
             boolean pluginFound = false;
             for (PluginInfo pluginInfo : nodeInfo.getInfo(PluginsAndModules.class).getPluginInfos()) {
@@ -83,17 +84,20 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "language");
 
         //Check the source for the expected language
-        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap()
+                .get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
     }
 
     public void testCategories() throws Exception {
 
-        String inputText = "The people played lots of sports like soccer and hockey. The score was very high. Touchdown!";
+        String inputText = "The people played lots of sports like soccer and hockey. The score was very high. "
+                + "Touchdown!";
 
         SearchResponse response = exercisePipeline(inputText, "categories");
 
         //Check the source for the expected category
-        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("SPORTS"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap()
+                .get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("SPORTS"));
     }
 
     public void testSentiment() throws Exception {
@@ -103,7 +107,8 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "sentiment");
 
         //Check the source for the expected sentiment
-        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap()
+                .get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
     }
 
     public void testTranslateToEnglish() throws Exception {
@@ -113,7 +118,9 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "translate_eng");
 
         //Check the source for the expected English translation
-        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("Vladimir Putin"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap()
+                .get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue),
+                Matchers.equalTo("Vladimir Putin"));
     }
 
     public void testTranslateFromEnglish() throws Exception {
@@ -122,30 +129,42 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         SearchResponse response = exercisePipeline(inputText, "translate_rus");
 
         //Check the source for the expected Russian translation
-        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap().get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("Владимир Путин"));
+        MatcherAssert.assertThat(response.getHits().getAt(0).getSourceAsMap()
+                .get(NameTranslationProcessor.Parameters.TARGET_FIELD.defaultValue),
+                Matchers.equalTo("Владимир Путин"));
     }
 
     public void testEntities() throws Exception {
 
-        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent women in comedy.”";
+        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t "
+                + "be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The "
+                + "Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent "
+                + "women in comedy.”";
 
         SearchResponse response = exercisePipeline(inputText, "entities");
 
         //Check the source for the expected entity result
-        assertFalse(((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
-        Map entity = (Map)((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
+        assertFalse(((List)response.getHits().getAt(0).getSourceAsMap()
+                .get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
+        Map entity = (Map)((List)response.getHits().getAt(0).getSourceAsMap()
+                .get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
         MatcherAssert.assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
     }
 
     public void testEntitiesWithSentiment() throws Exception {
 
-        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent women in comedy.”";
+        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t "
+                + "be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The "
+                + "Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent "
+                + "women in comedy.”";
 
         SearchResponse response = exercisePipeline(inputText, "entities_sentiment");
 
         //Check the source for the expected entity level sentiment
-        assertFalse(((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
-        Map entity = (Map)((List)response.getHits().getAt(0).getSourceAsMap().get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
+        assertFalse(((List)response.getHits().getAt(0).getSourceAsMap()
+                .get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
+        Map entity = (Map)((List)response.getHits().getAt(0).getSourceAsMap()
+                .get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
         MatcherAssert.assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
         MatcherAssert.assertThat(entity.get("sentiment"), Matchers.equalTo("neu"));
     }
@@ -153,15 +172,21 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
     //Test that all (or most) of the processors work together
     public void testAll() throws Exception {
 
-        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent women in comedy.”";
+        String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t "
+                + "be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, “The "
+                + "Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most magnificent "
+                + "women in comedy.”";
 
         SearchResponse response = exercisePipeline(inputText, "all");
 
         //Check the source for the expected entity result
         Map<String, Object> source = response.getHits().getAt(0).getSourceAsMap();
-        MatcherAssert.assertThat(source.get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
-        MatcherAssert.assertThat(source.get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("ARTS_AND_ENTERTAINMENT"));
-        MatcherAssert.assertThat(source.get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
+        MatcherAssert.assertThat(source.get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue),
+                Matchers.equalTo("eng"));
+        MatcherAssert.assertThat(source.get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue),
+                Matchers.equalTo("ARTS_AND_ENTERTAINMENT"));
+        MatcherAssert.assertThat(source.get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue),
+                Matchers.equalTo("pos"));
 
         assertFalse(((List)source.get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).isEmpty());
         Map entity = (Map)((List)source.get(EntitiesProcessor.Parameters.TARGET_FIELD.defaultValue)).get(0);
@@ -171,11 +196,14 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
     private SearchResponse exercisePipeline(String inputText, String pipelineName) throws IOException {
 
         //Add the ingest pipeline
-        AcknowledgedResponse pipelineResponse = client().admin().cluster().preparePutPipeline(pipelineName, getProcessorConfig(pipelineName), XContentType.JSON).get();
+        AcknowledgedResponse pipelineResponse = client().admin().cluster()
+                .preparePutPipeline(pipelineName, getProcessorConfig(pipelineName), XContentType.JSON).get();
         assertTrue("Failed to add ingest pipeline", pipelineResponse.isAcknowledged());
 
         //Add a document that uses the ingest pipeline
-        IndexResponse indexResponse = client().prepareIndex("test", "test").setPipeline(pipelineName).setSource(XContentFactory.jsonBuilder().startObject().field("text", inputText).endObject()).get();
+        IndexResponse indexResponse = client().prepareIndex("test", "test").setPipeline(pipelineName)
+                .setSource(XContentFactory.jsonBuilder().startObject().field("text", inputText)
+                        .endObject()).get();
         assertTrue("Failed to index document correctly", indexResponse.status().equals(RestStatus.CREATED));
         //Force index refresh
         refresh("test");

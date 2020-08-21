@@ -28,10 +28,10 @@ import java.util.Map;
 
 public class EntitiesProcessorTest extends ESSingleNodeTestCase {
 
-    private static final String INPUTTEXT = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, "
-            + "couldn’t be more pleased with the new all-female Ghostbusters cast, telling The Hollywood Reporter, "
-            + "“The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these most "
-            + "magnificent women in comedy.";
+    private static final String INPUTTEXT = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters "
+            + "film, couldn’t be more pleased with the new all-female Ghostbusters cast, telling The Hollywood "
+            + "Reporter, “The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these "
+            + "most magnificent women in comedy.";
 
     public void testEntities() throws Exception {
         EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),

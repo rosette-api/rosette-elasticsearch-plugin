@@ -34,21 +34,25 @@ import java.util.Map;
 public class CategoriesProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_categories";
-    private static final Logger LOGGER = Loggers.getLogger(CategoriesProcessor.class, CategoriesProcessor.class.getName());
+    private static final Logger LOGGER = Loggers
+            .getLogger(CategoriesProcessor.class, CategoriesProcessor.class.getName());
 
-    CategoriesProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField) {
+    CategoriesProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField,
+                        String targetField) {
         super(rosAPI, tag, description, TYPE, inputField, targetField);
     }
 
     @Override
     public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /categories endpoint and set the top result in the field
-        DocumentRequest<CategoriesOptions> request = DocumentRequest.<CategoriesOptions>builder().content(inputText).build();
+        DocumentRequest<CategoriesOptions> request = DocumentRequest.<CategoriesOptions>builder()
+                .content(inputText).build();
         CategoriesResponse response;
         try {
             // RosApi client binding's Jackson needs elevated privilege
             response = AccessController.doPrivileged((PrivilegedAction<CategoriesResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.CATEGORIES_SERVICE_PATH, request, CategoriesResponse.class)
+                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.CATEGORIES_SERVICE_PATH, request,
+                            CategoriesResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {
             LOGGER.error(ex.getErrorResponse().getMessage());
@@ -76,7 +80,8 @@ public class CategoriesProcessor extends RosetteAbstractProcessor {
         public Processor create(Map<String, Processor.Factory> registry, String processorTag,
                                 String processorDescription, Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
-            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
+            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config,
+                    Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
             return new CategoriesProcessor(rosAPI, processorTag, processorDescription, inputField, targetField);
         }
     }

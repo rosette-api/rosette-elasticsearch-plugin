@@ -36,21 +36,25 @@ public class SentimentProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_sentiment";
 
-    private static final Logger LOGGER = Loggers.getLogger(SentimentProcessor.class, SentimentProcessor.class.getName());
+    private static final Logger LOGGER = Loggers.getLogger(SentimentProcessor.class,
+            SentimentProcessor.class.getName());
 
-    SentimentProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField) {
+    SentimentProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField,
+                       String targetField) {
         super(rosAPI, tag, description, TYPE, inputField, targetField);
     }
 
     @Override
     public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /sentiment endpoint and set the top result in the field
-        DocumentRequest<SentimentOptions> request = DocumentRequest.<SentimentOptions>builder().content(inputText).build();
+        DocumentRequest<SentimentOptions> request = DocumentRequest.<SentimentOptions>builder()
+                .content(inputText).build();
         SentimentResponse response;
         try {
             // RosApi client binding's Jackson needs elevated privilege
             response = AccessController.doPrivileged((PrivilegedAction<SentimentResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.SENTIMENT_SERVICE_PATH, request, SentimentResponse.class)
+                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.SENTIMENT_SERVICE_PATH, request,
+                            SentimentResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {
             LOGGER.error(ex.getErrorResponse().getMessage());
@@ -76,7 +80,8 @@ public class SentimentProcessor extends RosetteAbstractProcessor {
         public Processor create(Map<String, Processor.Factory> registry, String processorTag,
                                 String processorDescription, Map<String, Object> config) throws Exception {
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
-            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
+            String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config,
+                    Parameters.TARGET_FIELD.name, Parameters.TARGET_FIELD.defaultValue);
             return new SentimentProcessor(rosAPI, processorTag, processorDescription, inputField, targetField);
         }
     }
