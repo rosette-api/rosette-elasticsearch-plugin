@@ -43,7 +43,7 @@
         <commons-codec.version>1.15</commons-codec.version>
         <commons-lang3.version>3.11</commons-lang3.version>
         <findbugs.version>3.0.2</findbugs.version>
-        <joda-time.version>2.10.6</joda-time.version>
+        <joda-time.version>2.10.10</joda-time.version>
         <jopt-simple.version>5.0.4</jopt-simple.version>
         <json-schema-validator.version>2.2.14</json-schema-validator.version>
         <mockserver.version>5.11.1</mockserver.version>
@@ -81,13 +81,6 @@
             <artifactId>elasticsearch</artifactId>
             <scope>provided</scope>
             <exclusions>
-                <!-- elasticsearch-plugin-classloader is only for 7.11.0
-                     https://github.com/elastic/elasticsearch/issues/68889
-                     https://github.com/elastic/elasticsearch/pull/68926   -->
-                <exclusion>
-                    <groupId>org.elasticsearch</groupId>
-                    <artifactId>elasticsearch-plugin-classloader</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>net.sf.jopt-simple</groupId>
                     <artifactId>jopt-simple</artifactId>
