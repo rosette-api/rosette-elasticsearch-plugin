@@ -35,6 +35,7 @@
     </dependencies>
     <properties>
         <curl.output>${project.build.directory}/curl-output.txt</curl.output>
+        <docker-maven-plugin.version>0.34.1</docker-maven-plugin.version>
     </properties>
     <build>
         <defaultGoal>verify</defaultGoal>

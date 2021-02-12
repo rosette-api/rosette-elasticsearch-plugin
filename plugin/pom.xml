@@ -39,7 +39,8 @@
         </site>
     </distributionManagement>
     <properties>
-        <commons-codec.version>1.14</commons-codec.version>
+        <bnd-maven-plugin.version>5.2.0</bnd-maven-plugin.version>
+        <commons-codec.version>1.15</commons-codec.version>
         <commons-lang3.version>3.11</commons-lang3.version>
         <findbugs.version>3.0.2</findbugs.version>
         <joda-time.version>2.10.6</joda-time.version>
@@ -137,6 +138,10 @@
             <version>${mockserver.version}</version>
             <scope>test</scope>
             <exclusions>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
                 <exclusion> <!-- This conflicts with a library from rosette api binding. -->
                     <groupId>jakarta.validation</groupId>
                     <artifactId>jakarta.validation-api</artifactId>
@@ -144,6 +149,10 @@
                 <exclusion> <!-- Conflicts with rosette api binding -->
                     <groupId>jakarta.xml.bind</groupId>
                     <artifactId>jakarta.xml.bind-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
                 </exclusion>
                 <exclusion> <!-- Java 11 -->
                     <groupId>javax.xml.bind</groupId>
