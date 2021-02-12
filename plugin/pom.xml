@@ -80,6 +80,13 @@
             <artifactId>elasticsearch</artifactId>
             <scope>provided</scope>
             <exclusions>
+                <!-- elasticsearch-plugin-classloader is only for 7.11.0
+                     https://github.com/elastic/elasticsearch/issues/68889
+                     https://github.com/elastic/elasticsearch/pull/68926   -->
+                <exclusion>
+                    <groupId>org.elasticsearch</groupId>
+                    <artifactId>elasticsearch-plugin-classloader</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>net.sf.jopt-simple</groupId>
                     <artifactId>jopt-simple</artifactId>
