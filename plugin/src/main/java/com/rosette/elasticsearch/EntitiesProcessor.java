@@ -16,7 +16,6 @@
 package com.rosette.elasticsearch;
 
 import com.basistech.rosette.api.HttpRosetteAPIException;
-import com.basistech.rosette.api.common.AbstractRosetteAPI;
 import com.basistech.rosette.apimodel.DocumentRequest;
 import com.basistech.rosette.apimodel.EntitiesOptions;
 import com.basistech.rosette.apimodel.NameTranslationRequest;
@@ -155,9 +154,9 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
 
         //RNT
         if (doTranslate
-                && (type.equalsIgnoreCase("PERSON")
-                || type.equalsIgnoreCase("LOCATION")
-                || type.equalsIgnoreCase("ORGANIZATION"))) {
+                && ("PERSON".equalsIgnoreCase(type)
+                || "LOCATION".equalsIgnoreCase(type)
+                || "ORGANIZATION".equalsIgnoreCase(type))) {
             NameTranslationRequest rntrequest = NameTranslationRequest.builder()
                     .name(headMention)
                     .targetLanguage(translateLanguage)

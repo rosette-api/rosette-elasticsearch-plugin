@@ -15,7 +15,6 @@
 */
 package com.rosette.elasticsearch;
 
-import com.basistech.rosette.api.HttpRosetteAPI;
 import com.basistech.rosette.api.HttpRosetteAPIException;
 import com.basistech.rosette.apimodel.CategoriesOptions;
 import com.basistech.rosette.apimodel.CategoriesResponse;
