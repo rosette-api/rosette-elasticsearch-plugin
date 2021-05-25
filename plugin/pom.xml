@@ -104,8 +104,12 @@
             <groupId>org.elasticsearch.test</groupId>
             <artifactId>framework</artifactId>
             <scope>test</scope>
-            <!-- dependency convergence error with org.apache.httpcomponents:httpclient:jar:4.5.2 -->
             <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <!-- dependency convergence error with org.apache.httpcomponents:httpclient:jar:4.5.2 -->
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>

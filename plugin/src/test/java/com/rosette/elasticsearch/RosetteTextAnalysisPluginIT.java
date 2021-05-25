@@ -49,9 +49,9 @@ import java.util.Map;
 public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
 
     @Override
-    protected Settings nodeSettings(int nodeOrdinal) {
+    protected Settings nodeSettings(int nodeOrdinal, Settings otherSettings) {
         return Settings.builder()
-                .put(super.nodeSettings(nodeOrdinal))
+                .put(super.nodeSettings(nodeOrdinal, otherSettings))
                 .put(RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey(), System.getProperty("rosette.api.key", ""))
                 .build();
     }
