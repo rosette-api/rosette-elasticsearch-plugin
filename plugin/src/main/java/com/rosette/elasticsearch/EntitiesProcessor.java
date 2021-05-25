@@ -41,6 +41,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.basistech.rosette.api.common.AbstractRosetteAPI.ENTITIES_SERVICE_PATH;
+import static com.basistech.rosette.api.common.AbstractRosetteAPI.NAME_TRANSLATION_SERVICE_PATH;
+import static com.basistech.rosette.api.common.AbstractRosetteAPI.SENTIMENT_SERVICE_PATH;
+
 public class EntitiesProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_entities";
@@ -74,14 +78,14 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
                 DocumentRequest<SentimentOptions> sentrequest = DocumentRequest.<SentimentOptions>builder()
                         .content(inputText).build();
                 adm = AccessController.doPrivileged((PrivilegedAction<AnnotatedText>) () ->
-                        rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.SENTIMENT_SERVICE_PATH, sentrequest)
+                        rosAPI.getHttpRosetteAPI().perform(SENTIMENT_SERVICE_PATH, sentrequest)
                 );
             } else {
                 //REX
                 DocumentRequest<EntitiesOptions> entityrequest = DocumentRequest.<EntitiesOptions>builder()
                         .content(inputText).build();
                 adm = AccessController.doPrivileged((PrivilegedAction<AnnotatedText>) () ->
-                        rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.ENTITIES_SERVICE_PATH, entityrequest)
+                        rosAPI.getHttpRosetteAPI().perform(ENTITIES_SERVICE_PATH, entityrequest)
                 );
             }
         } catch (HttpRosetteAPIException ex) {
@@ -163,7 +167,7 @@ public class EntitiesProcessor extends RosetteAbstractProcessor {
             NameTranslationResponse rntresponse;
             try {
                 rntresponse = AccessController.doPrivileged((PrivilegedAction<NameTranslationResponse>) () ->
-                        rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.NAME_TRANSLATION_SERVICE_PATH, rntrequest,
+                        rosAPI.getHttpRosetteAPI().perform(NAME_TRANSLATION_SERVICE_PATH, rntrequest,
                                 NameTranslationResponse.class)
                 );
             } catch (HttpRosetteAPIException ex) {

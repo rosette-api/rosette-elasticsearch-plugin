@@ -22,12 +22,14 @@ import org.elasticsearch.ingest.RandomDocumentPicks;
 import org.elasticsearch.test.ESSingleNodeTestCase;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class NameTranslationProcessorTest extends ESSingleNodeTestCase {
 
+    @Test
     public void testTranslateToEnglish() throws Exception {
         NameTranslationProcessor processor = new NameTranslationProcessor(new RosetteApiWrapper(),
                 randomUnicodeOfLength(10), "description", "text", "translation",

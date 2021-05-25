@@ -32,6 +32,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Map;
 
+import static com.basistech.rosette.api.common.AbstractRosetteAPI.SENTIMENT_SERVICE_PATH;
+
 public class SentimentProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_sentiment";
@@ -53,7 +55,7 @@ public class SentimentProcessor extends RosetteAbstractProcessor {
         try {
             // RosApi client binding's Jackson needs elevated privilege
             response = AccessController.doPrivileged((PrivilegedAction<SentimentResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.SENTIMENT_SERVICE_PATH, request,
+                    rosAPI.getHttpRosetteAPI().perform(SENTIMENT_SERVICE_PATH, request,
                             SentimentResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {

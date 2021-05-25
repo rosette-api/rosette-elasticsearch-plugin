@@ -20,12 +20,14 @@ import org.elasticsearch.ingest.RandomDocumentPicks;
 import org.elasticsearch.test.ESSingleNodeTestCase;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CategoriesProcessorTest extends ESSingleNodeTestCase {
 
+    @Test
     public void testCategories() throws Exception {
         CategoriesProcessor processor = new CategoriesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
                 "description", "text", "category");

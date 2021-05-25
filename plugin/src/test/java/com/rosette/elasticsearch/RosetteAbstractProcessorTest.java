@@ -39,6 +39,7 @@ public class RosetteAbstractProcessorTest extends ESSingleNodeTestCase {
         }
     }
 
+    @Test
     public void testEmptyField() throws Exception {
         MockProcessor processor = new MockProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
                 "description", "text", "target");

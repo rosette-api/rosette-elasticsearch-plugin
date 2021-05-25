@@ -21,6 +21,7 @@ import org.elasticsearch.ingest.RandomDocumentPicks;
 import org.elasticsearch.test.ESSingleNodeTestCase;
 import org.hamcrest.Matchers;
 import org.hamcrest.MatcherAssert;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
             + "Reporter, “The Aykroyd family is delighted by this inheritance of the Ghostbusters torch by these "
             + "most magnificent women in comedy.";
 
+    @Test
     public void testEntities() throws Exception {
         EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
                 "description", "text", "entities", false, false,
@@ -54,6 +56,7 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
         MatcherAssert.assertThat(entity.get("offsets"), Matchers.nullValue());
     }
 
+    @Test
     public void testOffsets() throws Exception {
         EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
                 "description", "text", "entities", true, false,
@@ -74,6 +77,7 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
         MatcherAssert.assertThat(entity.get("translation"), Matchers.nullValue());
     }
 
+    @Test
     public void testSentiment() throws Exception {
         EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
                 "description", "text", "entities", false, false,
@@ -93,6 +97,7 @@ public class EntitiesProcessorTest extends ESSingleNodeTestCase {
         MatcherAssert.assertThat(entity.get("offsets"), Matchers.nullValue());
     }
 
+    @Test
     public void testTranslate() throws Exception {
         EntitiesProcessor processor = new EntitiesProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
                 "description", "text", "entities", false, true,

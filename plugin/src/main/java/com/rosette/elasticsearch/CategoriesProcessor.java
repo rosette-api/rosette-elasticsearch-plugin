@@ -31,6 +31,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Map;
 
+import static com.basistech.rosette.api.common.AbstractRosetteAPI.CATEGORIES_SERVICE_PATH;
+
 public class CategoriesProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_categories";
@@ -51,8 +53,7 @@ public class CategoriesProcessor extends RosetteAbstractProcessor {
         try {
             // RosApi client binding's Jackson needs elevated privilege
             response = AccessController.doPrivileged((PrivilegedAction<CategoriesResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.CATEGORIES_SERVICE_PATH, request,
-                            CategoriesResponse.class)
+                    rosAPI.getHttpRosetteAPI().perform(CATEGORIES_SERVICE_PATH, request, CategoriesResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {
             LOGGER.error(ex.getErrorResponse().getMessage());

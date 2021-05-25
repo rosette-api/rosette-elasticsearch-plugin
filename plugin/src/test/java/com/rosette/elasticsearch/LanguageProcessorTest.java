@@ -20,12 +20,14 @@ import org.elasticsearch.ingest.RandomDocumentPicks;
 import org.elasticsearch.test.ESSingleNodeTestCase;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class LanguageProcessorTest extends ESSingleNodeTestCase {
 
+    @Test
     public void testLangId() throws Exception {
         LanguageProcessor processor = new LanguageProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
                 "description", "text", "language");

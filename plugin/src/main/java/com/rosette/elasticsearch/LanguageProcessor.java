@@ -31,6 +31,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Map;
 
+import static com.basistech.rosette.api.common.AbstractRosetteAPI.LANGUAGE_SERVICE_PATH;
+
 public class LanguageProcessor extends RosetteAbstractProcessor {
 
     public static final String TYPE = "ros_language";
@@ -50,7 +52,7 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
         try {
             // RosApi client binding's Jackson needs elevated privilege
             response = AccessController.doPrivileged((PrivilegedAction<LanguageResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.LANGUAGE_SERVICE_PATH, request,
+                    rosAPI.getHttpRosetteAPI().perform(LANGUAGE_SERVICE_PATH, request,
                             LanguageResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {

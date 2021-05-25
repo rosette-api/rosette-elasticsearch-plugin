@@ -76,7 +76,7 @@ public final class RosetteApiWrapper {
         HttpRosetteAPI.Builder clientBuilder = new HttpRosetteAPI.Builder();
         clientBuilder.key(apiKey).additionalHeader("X-RosetteAPI-App", APP_HEADER);
         if (!Strings.isNullOrEmpty(altUrl)) {
-            LOGGER.info("Using alternative URL for Rosette API at : " + altUrl);
+            LOGGER.info("Using alternative URL for Rosette API at : {} ", altUrl);
             clientBuilder.url(altUrl);
         }
         httpRosetteAPI = clientBuilder.build();
