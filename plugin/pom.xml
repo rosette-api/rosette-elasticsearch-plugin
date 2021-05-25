@@ -39,14 +39,14 @@
         </site>
     </distributionManagement>
     <properties>
-        <bnd-maven-plugin.version>5.2.0</bnd-maven-plugin.version>
+        <bnd-maven-plugin.version>5.3.0</bnd-maven-plugin.version>
         <commons-codec.version>1.15</commons-codec.version>
-        <commons-lang3.version>3.11</commons-lang3.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
         <findbugs.version>3.0.2</findbugs.version>
         <joda-time.version>2.10.10</joda-time.version>
         <jopt-simple.version>5.0.4</jopt-simple.version>
         <json-schema-validator.version>2.2.14</json-schema-validator.version>
-        <mockserver.version>5.11.1</mockserver.version>
+        <mockserver.version>5.11.2</mockserver.version>
         <mockserver.baseurl>/rest/worker/v1/</mockserver.baseurl>
         <hamcrest.version>2.2</hamcrest.version>
         <slf4j-ext.version>1.7.30</slf4j-ext.version>
@@ -135,6 +135,11 @@
             <version>${mockserver.version}</version>
             <scope>test</scope>
             <exclusions>
+                <!-- mockserver 5.11.2 references two version of swagger-core -->
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-core</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
