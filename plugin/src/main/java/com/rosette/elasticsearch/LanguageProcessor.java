@@ -15,7 +15,6 @@
 */
 package com.rosette.elasticsearch;
 
-import com.basistech.rosette.api.HttpRosetteAPI;
 import com.basistech.rosette.api.HttpRosetteAPIException;
 import com.basistech.rosette.apimodel.DocumentRequest;
 import com.basistech.rosette.apimodel.LanguageOptions;
@@ -30,6 +29,8 @@ import org.elasticsearch.ingest.Processor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Map;
+
+import static com.basistech.rosette.api.common.AbstractRosetteAPI.LANGUAGE_SERVICE_PATH;
 
 public class LanguageProcessor extends RosetteAbstractProcessor {
 
@@ -50,7 +51,7 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
         try {
             // RosApi client binding's Jackson needs elevated privilege
             response = AccessController.doPrivileged((PrivilegedAction<LanguageResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(HttpRosetteAPI.LANGUAGE_SERVICE_PATH, request,
+                    rosAPI.getHttpRosetteAPI().perform(LANGUAGE_SERVICE_PATH, request,
                             LanguageResponse.class)
             );
         } catch (HttpRosetteAPIException ex) {

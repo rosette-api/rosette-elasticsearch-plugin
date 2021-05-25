@@ -34,6 +34,7 @@ import org.elasticsearch.test.ESIntegTestCase;
 import org.elasticsearch.test.hamcrest.ElasticsearchAssertions;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,9 +50,9 @@ import java.util.Map;
 public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
 
     @Override
-    protected Settings nodeSettings(int nodeOrdinal) {
+    protected Settings nodeSettings(int nodeOrdinal, Settings otherSettings) {
         return Settings.builder()
-                .put(super.nodeSettings(nodeOrdinal))
+                .put(super.nodeSettings(nodeOrdinal, otherSettings))
                 .put(RosetteTextAnalysisPlugin.ROSETTE_API_KEY.getKey(), System.getProperty("rosette.api.key", ""))
                 .build();
     }
@@ -61,6 +62,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         return Collections.singleton(RosetteTextAnalysisPlugin.class);
     }
 
+    @Test
     public void testPluginIsLoaded() throws Exception {
         NodesInfoResponse response = client().admin().cluster().prepareNodesInfo()
                 .addMetric(NodesInfoRequest.Metric.PLUGINS.metricName()).get();
@@ -77,6 +79,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
     }
 
     //Tests the language processor
+    @Test
     public void testLanguage() throws Exception {
 
         String inputText = "This is a very English document. It should be identified as English.";
@@ -88,6 +91,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
                 .get(LanguageProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("eng"));
     }
 
+    @Test
     public void testCategories() throws Exception {
 
         String inputText = "The people played lots of sports like soccer and hockey. The score was very high. "
@@ -100,6 +104,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
                 .get(CategoriesProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("SPORTS"));
     }
 
+    @Test
     public void testSentiment() throws Exception {
 
         String inputText = "I love this sentence so much I want to marry it!";
@@ -111,6 +116,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
                 .get(SentimentProcessor.Parameters.TARGET_FIELD.defaultValue), Matchers.equalTo("pos"));
     }
 
+    @Test
     public void testTranslateToEnglish() throws Exception {
 
         String inputText = "Владимир Путин";
@@ -123,6 +129,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
                 Matchers.equalTo("Vladimir Putin"));
     }
 
+    @Test
     public void testTranslateFromEnglish() throws Exception {
         String inputText = "Vladimir Putin";
 
@@ -134,6 +141,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
                 Matchers.equalTo("Владимир Путин"));
     }
 
+    @Test
     public void testEntities() throws Exception {
 
         String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t "
@@ -151,6 +159,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         MatcherAssert.assertThat(entity.get("mention"), Matchers.equalTo("Original Ghostbuster"));
     }
 
+    @Test
     public void testEntitiesWithSentiment() throws Exception {
 
         String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t "
@@ -170,6 +179,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
     }
 
     //Test that all (or most) of the processors work together
+    @Test
     public void testAll() throws Exception {
 
         String inputText = "Original Ghostbuster Dan Aykroyd, who also co-wrote the 1984 Ghostbusters film, couldn’t "
@@ -204,7 +214,7 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
         IndexResponse indexResponse = client().prepareIndex("test", "test").setPipeline(pipelineName)
                 .setSource(XContentFactory.jsonBuilder().startObject().field("text", inputText)
                         .endObject()).get();
-        assertTrue("Failed to index document correctly", indexResponse.status().equals(RestStatus.CREATED));
+        assertEquals("Failed to index document correctly", RestStatus.CREATED, indexResponse.status());
         //Force index refresh
         refresh("test");
 

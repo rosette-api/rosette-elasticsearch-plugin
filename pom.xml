@@ -23,7 +23,7 @@
     <parent>
         <artifactId>open-source-parent</artifactId>
         <groupId>com.basistech</groupId>
-        <version>7.0.1</version>
+        <version>8.1.0</version>
         <relativePath />
     </parent>
     <inceptionYear>2017</inceptionYear>
@@ -45,11 +45,11 @@
         <bt.compile.source>${jdk.version}</bt.compile.source>
         <bt.compile.target>${jdk.version}</bt.compile.target>
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
-        <elasticsearch.version>7.12.1</elasticsearch.version>
-        <log4j.version>2.14.0</log4j.version>
+        <elasticsearch.version>7.13.0</elasticsearch.version>
+        <log4j.version>2.14.1</log4j.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
         <rosette.api.binding.version>1.18.0</rosette.api.binding.version>
     </properties>
     <modules>
@@ -82,6 +82,12 @@
                 <groupId>org.elasticsearch.test</groupId>
                 <artifactId>framework</artifactId>
                 <version>${elasticsearch.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-lang3</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

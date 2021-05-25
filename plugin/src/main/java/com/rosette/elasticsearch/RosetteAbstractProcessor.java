@@ -29,7 +29,7 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
     protected String inputField;
     protected String targetField;
     protected RosetteApiWrapper rosAPI;
-    protected final String type;
+    protected final String processorType;
 
     RosetteAbstractProcessor(RosetteApiWrapper rosAPI, String tag, String description, String processorType,
                              String inputField, String targetField) {
@@ -37,14 +37,14 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
         this.inputField = inputField;
         this.targetField = targetField;
         this.rosAPI = rosAPI;
-        this.type = processorType;
+        this.processorType = processorType;
     }
 
     @Override
     public IngestDocument execute(IngestDocument ingestDocument) throws Exception {
         if (ingestDocument.hasField(targetField)) {
             throw new ElasticsearchException("Document already contains data in target field for this ingest "
-                    + "processor: " + type);
+                    + "processor: " + processorType);
         }
         if (!ingestDocument.hasField(inputField)) {
             //Do nothing
@@ -69,7 +69,7 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
 
     @Override
     public String getType() {
-        return this.type;
+        return this.processorType;
     }
 
     /**
