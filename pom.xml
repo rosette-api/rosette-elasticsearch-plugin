@@ -50,7 +50,7 @@
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
-        <rosette.api.binding.version>1.18.0</rosette.api.binding.version>
+        <rosette.api.binding.version>1.19.1</rosette.api.binding.version>
     </properties>
     <modules>
         <module>plugin</module>
