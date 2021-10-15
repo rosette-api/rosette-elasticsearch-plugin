@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-parent</artifactId>
-    <version>7.15.0.0</version>
+    <version>7.15.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <artifactId>open-source-parent</artifactId>
@@ -45,7 +45,7 @@
         <bt.compile.source>${jdk.version}</bt.compile.source>
         <bt.compile.target>${jdk.version}</bt.compile.target>
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
-        <elasticsearch.version>7.15.0</elasticsearch.version>
+        <elasticsearch.version>7.15.1</elasticsearch.version>
         <log4j.version>2.14.1</log4j.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
