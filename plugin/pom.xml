@@ -43,13 +43,13 @@
         <commons-codec.version>1.15</commons-codec.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <findbugs.version>3.0.2</findbugs.version>
-        <joda-time.version>2.10.10</joda-time.version>
+        <joda-time.version>2.10.13</joda-time.version>
         <jopt-simple.version>5.0.4</jopt-simple.version>
         <json-schema-validator.version>2.2.14</json-schema-validator.version>
         <mockserver.version>5.11.2</mockserver.version>
         <mockserver.baseurl>/rest/worker/v1/</mockserver.baseurl>
         <hamcrest.version>2.2</hamcrest.version>
-        <slf4j-ext.version>1.7.30</slf4j-ext.version>
+        <slf4j-ext.version>1.7.32</slf4j-ext.version>
     </properties>
     <dependencies>
         <dependency>
