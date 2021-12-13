@@ -46,7 +46,7 @@
         <bt.compile.target>${jdk.version}</bt.compile.target>
         <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
         <elasticsearch.version>7.16.1</elasticsearch.version>
-        <log4j.version>2.14.1</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
