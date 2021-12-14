@@ -54,7 +54,8 @@
                             <build>
                                 <from>docker.elastic.co/elasticsearch/elasticsearch:${elasticsearch.version}</from>
                                 <runCmds>
-                                    <run>find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
+                                    <!-- TODO:  ES should clean this up in some post 7.16.1 release and then we can remove this. -->
+                                    <run>rm -f /usr/share/elasticsearch/lib/log4j-api-2.11.1.jar; curl -k -s -O https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.16.0/log4j-api-2.16.0.jar; mv log4j-api-2.16.0.jar /usr/share/elasticsearch/lib/.; find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
                                 </runCmds>
                                 <!-- Grap the plugin zip via dependencies -->
                                 <assembly>
