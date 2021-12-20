@@ -22,7 +22,7 @@
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>7.16.1.1-SNAPSHOT</version>
+        <version>7.16.1.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <dependencies>
@@ -54,10 +54,7 @@
                             <build>
                                 <from>docker.elastic.co/elasticsearch/elasticsearch:${elasticsearch.version}</from>
                                 <runCmds>
-                                    <!-- TODO:  ES should clean this up in some post 7.16.1 release and then we can remove this.
-                                                This particular collection of commands works around a Docker filesystem bug and
-                                                the ES jar hell check. -->
-                                    <run>curl -k -s -O https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.16.0/log4j-api-2.16.0.jar; rm lib/log4j-api-2.11.1.jar; ln -s ../log4j-api-2.16.0.jar lib/log4j-api-2.11.1.jar; find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
+                                    <run>find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
                                 </runCmds>
                                 <!-- Grap the plugin zip via dependencies -->
                                 <assembly>
