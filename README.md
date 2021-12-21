@@ -59,9 +59,40 @@ You can also [Test with Docker](docker/README.md)
 ## Development Tips
 
 #### Executing Unit Tests In Intellij
-To avoid Jar Hell errors `Help > Edit Custom Properties` and add
-```
-idea.no.launcher=true
-```
-See https://youtrack.jetbrains.com/issue/IDEA-182214
+Jar Hell:  Duplicate `idea_rt.jar`
+* `Help > Edit Custom Properties` and add `idea.no.launcher=true`
+* Restart Intellij
+* Reference:  https://youtrack.jetbrains.com/issue/IDEA-182214
 
+Jar Hell:
+```
+class: jdk.packager.services.UserJvmOptionsService
+jar1: /Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/lib/ant-javafx.jar
+jar2: /Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/lib/packager.jar
+```
+* `File > Project Structure > Platform Settings > SDKs`
+* `Add new SDK > JDK 8`
+* Name it `Java 8 Elasticsearch`
+* Remove all libs except the following:
+  ```
+  jre/lib/charsets.jar
+  jre/lib/jce.jar
+  jre/lib/jfr.jar
+  jre/lib/jsse.jar
+  jre/lib/resources.jar
+  jre/lib/rt.jar
+  ```
+* Select `Project Settings > Project` and change the SDK to the one we just created.
+* If you have existing run/debug configurations from running tests previously,
+remove them so that they pick up the new SDK when rerun. Or you can modify them
+to use the new SDK.
+* Reference:  https://github.com/elastic/elasticsearch/pull/13465#issuecomment-142124441
+
+Environment Variables For Testing Against Cloud:
+```
+ROSETTE_API_URL=https://api.rosette.com/rest/v1; ROSETTE_API_KEY=<YOUR_API_KEY>
+```
+I haven't found a good way to configure these settings such that they are
+inherited by the temporary run configurations that are generated when you
+execute a test from the source file.  You may need to copy and paste them
+around as needed.
