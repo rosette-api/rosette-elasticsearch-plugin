@@ -324,7 +324,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--Shading and relocating jackson so that the plugin can use the jackson-core jar with elevated priviliges-->
+            <!--Shading and relocating jackson so that the plugin can use the jackson-core jar with elevated privileges-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -420,6 +420,7 @@
                     <environmentVariables>
                         <ROSETTE_API_URL>http://localhost:${mockserver.port}${mockserver.baseurl}</ROSETTE_API_URL>
                     </environmentVariables>
+                    <argLine>${argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
