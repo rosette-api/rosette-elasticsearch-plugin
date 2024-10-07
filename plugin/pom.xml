@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-     Copyright 2021 Basis Technology Corp.
- 
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
- 
-         http://www.apache.org/licenses/LICENSE-2.0
- 
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This data and information is proprietary to, and a valuable trade secret
+  ~ of, Basis Technology Corp.  It is given in confidence by Basis Technology
+  ~ and may only be used as permitted under the license agreement under which
+  ~ it has been distributed, and in no other way.
+  ~
+  ~ Copyright (c) 2024 Basis Technology Corporation All rights reserved.
+  ~
+  ~ The technical data and information provided herein are provided with
+  ~ `limited rights', and the computer software provided herein is provided
+  ~ with `restricted rights' as those terms are defined in DAR and ASPR
+  ~ 7-104.9(a).
+  ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-plugin</artifactId>
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>7.17.0.1-SNAPSHOT</version>
+        <version>8.15.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <inceptionYear>2017</inceptionYear>
@@ -40,47 +38,88 @@
     </distributionManagement>
     <properties>
         <bnd-maven-plugin.version>5.3.0</bnd-maven-plugin.version>
-        <commons-codec.version>1.15</commons-codec.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <commons-codec.version>1.17.1</commons-codec.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <httpclient.version>5.3.1</httpclient.version>
+        <jackson.version>2.18.0</jackson.version>
+        <jackson-annotations.version>2.17.1</jackson-annotations.version>
+        <rosette.version>1.30.0</rosette.version>
+        <httpclient.version>5.4</httpclient.version>
         <findbugs.version>3.0.2</findbugs.version>
-        <joda-time.version>2.10.13</joda-time.version>
+        <joda-time.version>2.13.0</joda-time.version>
         <jopt-simple.version>5.0.4</jopt-simple.version>
         <json-schema-validator.version>2.2.14</json-schema-validator.version>
-        <mockserver.version>5.11.2</mockserver.version>
+        <mockserver.version>5.15.0</mockserver.version>
         <mockserver.baseurl>/rest/worker/v1/</mockserver.baseurl>
-        <hamcrest.version>2.2</hamcrest.version>
-        <slf4j-ext.version>1.7.32</slf4j-ext.version>
+        <hamcrest.version>3.0</hamcrest.version>
+        <slf4j-ext.version>2.0.16</slf4j-ext.version>
+        <mockito.version>5.11.0</mockito.version>
+        <skipTests>false</skipTests>
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.basistech.rosette</groupId>
-            <artifactId>rosette-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-codec</groupId>
-                    <artifactId>commons-codec</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons-codec.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-ext.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.basistech.rosette</groupId>
+            <artifactId>rosette-api-common</artifactId>
+            <version>${rosette.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
             <scope>provided</scope>
             <exclusions>
+                <exclusion>
+                    <groupId>com.carrotsearch.randomizedtesting</groupId>
+                    <artifactId>randomizedtesting-runner</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>net.sf.jopt-simple</groupId>
                     <artifactId>jopt-simple</artifactId>
@@ -96,11 +135,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.elasticsearch.test</groupId>
             <artifactId>framework</artifactId>
             <scope>test</scope>
@@ -109,7 +143,6 @@
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-lang3</artifactId>
                 </exclusion>
-                <!-- dependency convergence error with org.apache.httpcomponents:httpclient:jar:4.5.2 -->
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
@@ -135,7 +168,6 @@
             <version>${mockserver.version}</version>
             <scope>test</scope>
             <exclusions>
-                <!-- mockserver 5.11.2 references two version of swagger-core -->
                 <exclusion>
                     <groupId>io.swagger</groupId>
                     <artifactId>swagger-core</artifactId>
@@ -144,11 +176,11 @@
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
                 </exclusion>
-                <exclusion> <!-- This conflicts with a library from rosette api binding. -->
+                <exclusion>
                     <groupId>jakarta.validation</groupId>
                     <artifactId>jakarta.validation-api</artifactId>
                 </exclusion>
-                <exclusion> <!-- Conflicts with rosette api binding -->
+                <exclusion>
                     <groupId>jakarta.xml.bind</groupId>
                     <artifactId>jakarta.xml.bind-api</artifactId>
                 </exclusion>
@@ -156,7 +188,7 @@
                     <groupId>javax.validation</groupId>
                     <artifactId>validation-api</artifactId>
                 </exclusion>
-                <exclusion> <!-- Java 11 -->
+                <exclusion>
                     <groupId>javax.xml.bind</groupId>
                     <artifactId>jaxb-api</artifactId>
                 </exclusion>
@@ -181,10 +213,6 @@
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>com.github.java-json-tools</groupId>
                     <artifactId>json-schema-validator</artifactId>
                 </exclusion>
@@ -207,10 +235,6 @@
                 <exclusion>
                     <groupId>org.hamcrest</groupId>
                     <artifactId>hamcrest</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-ext</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -324,46 +348,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--Shading and relocating jackson so that the plugin can use the jackson-core jar with elevated priviliges-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-                            <createSourcesJar>true</createSourcesJar>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer" />
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer" />
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/maven/dependencies.properties</resource>
-                                </transformer>
-                            </transformers>
-                            <artifactSet>
-                                <!-- have to include all dependencies that use jackson due to relocation -->
-                                <includes>
-                                    <include>com.basistech:adm-json</include>
-                                    <include>com.basistech.rosette:rosette-api</include>
-                                    <include>com.basistech.rosette:rosette-api-json</include>
-                                    <include>com.basistech:common-api-jackson</include>
-                                    <include>com.fasterxml.jackson.core:*</include>
-                                </includes>
-                            </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.fasterxml</pattern>
-                                    <shadedPattern>com.basistech.shaded.com.fasterxml</shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -420,6 +404,7 @@
                     <environmentVariables>
                         <ROSETTE_API_URL>http://localhost:${mockserver.port}${mockserver.baseurl}</ROSETTE_API_URL>
                     </environmentVariables>
+                    <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
             <plugin>
@@ -432,13 +417,6 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                            <!-- Have to exclude the shaded jars to prevent jar hell during IT tests -->
-                            <classpathDependencyExcludes>
-                                <exclude>com.basistech:adm-json</exclude>
-                                <exclude>com.basistech.rosette:rosette-api</exclude>
-                                <exclude>com.basistech.rosette:rosette-api-json</exclude>
-                                <exclude>com.basistech:common-api-jackson</exclude>
-                            </classpathDependencyExcludes>
                             <systemPropertyVariables>
                                 <tests.security.manager>false</tests.security.manager>
                             </systemPropertyVariables>
@@ -471,7 +449,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
-                    <source>${jdk.version}</source>
+                    <source>${maven.compiler.source}</source>
                     <quiet>true</quiet>
                 </configuration>
                 <reportSets>

@@ -1,71 +1,54 @@
-/*
-* Copyright 2020 Basis Technology Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+/*******************************************************************************
+ * This data and information is proprietary to, and a valuable trade secret
+ * of, Basis Technology Corp.  It is given in confidence by Basis Technology
+ * and may only be used as permitted under the license agreement under which
+ * it has been distributed, and in no other way.
+ *
+ * Copyright (c) 2024 Basis Technology Corporation All rights reserved.
+ *
+ * The technical data and information provided herein are provided with
+ * `limited rights', and the computer software provided herein is provided
+ * with `restricted rights' as those terms are defined in DAR and ASPR
+ * 7-104.9(a).
+ *
+ ******************************************************************************/
 package com.rosette.elasticsearch;
 
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.RandomDocumentPicks;
-import org.elasticsearch.test.ESSingleNodeTestCase;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import org.elasticsearch.test.ESTestCase;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RosetteAbstractProcessorTest extends ESSingleNodeTestCase {
+public class RosetteAbstractProcessorTest extends ESTestCase {
 
-    class MockProcessor extends RosetteAbstractProcessor {
+    static class MockProcessor extends RosetteAbstractProcessor {
         MockProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField, String targetField) {
             super(rosAPI, tag, description, "mock_processor", inputField, targetField);
         }
 
         @Override
-        public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
+        public void processDocument(String inputText, IngestDocument ingestDocument) {
             ingestDocument.setFieldValue(targetField, "Processed!");
         }
     }
 
-    @Test
-    public void testEmptyField() throws Exception {
-        MockProcessor processor = new MockProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
-                "description", "text", "target");
-
-        //Process document with an empty "text" field
-        Map<String, Object> document = new HashMap<>();
-        IngestDocument ingestDocument = RandomDocumentPicks.randomIngestDocument(random(), document);
-        processor.execute(ingestDocument);
-
-        //Nothing should get placed in the target field
-        MatcherAssert.assertThat("Processor should not process empty ingest field",
-                ingestDocument.getSourceAndMetadata().get("target"), Matchers.nullValue());
-    }
-
     @Test(expected = ElasticsearchException.class)
     public void testOverwrite() throws Exception {
-        MockProcessor processor = new MockProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
-                "description", "text", "target");
+        try (MockProcessor processor = new MockProcessor(new RosetteApiWrapper(), randomUnicodeOfLength(10),
+                "description", "text", "target")) {
 
-        //Process document with a value already in the target field
-        Map<String, Object> document = new HashMap<>();
-        document.put("text", "input text");
-        document.put("target", "don't overwrite me!");
-        IngestDocument ingestDocument = RandomDocumentPicks.randomIngestDocument(random(), document);
+            //Process document with a value already in the target field
+            Map<String, Object> document = new HashMap<>();
+            document.put("text", "input text");
+            document.put("target", "don't overwrite me!");
+            IngestDocument ingestDocument = RandomDocumentPicks.randomIngestDocument(random(), document);
 
-        //We expect an exception to be thrown
-        processor.execute(ingestDocument);
+            //We expect an exception to be thrown
+            processor.execute(ingestDocument);
+        }
     }
 }

@@ -1,7 +1,48 @@
 {
   "document": {
     "label": "pos",
-    "confidence": 0.6410158927447778
+    "confidence": 0.7962072
   },
-  "entities": []
+  "entities": [
+    {
+      "type": "PERSON",
+      "mention": "Original Ghostbuster Dan Aykroyd",
+      "normalized": "Original Ghostbuster Dan Aykroyd",
+      "count": 2,
+      "mentionOffsets": [
+        {
+          "startOffset": 0,
+          "endOffset": 32
+        },
+        {
+          "startOffset": 185,
+          "endOffset": 192
+        }
+      ],
+      "entityId": "T0",
+      "confidence": 0.44447255,
+      "sentiment": {
+        "label": "pos",
+        "confidence": 0.70096395
+      }
+    },
+    {
+      "type": "PRODUCT",
+      "mention": "The Hollywood Reporter",
+      "normalized": "The Hollywood Reporter",
+      "count": 1,
+      "mentionOffsets": [
+        {
+          "startOffset": 156,
+          "endOffset": 178
+        }
+      ],
+      "entityId": "Q61503",
+      "linkingConfidence": 0.58811317,
+      "sentiment": {
+        "label": "pos",
+        "confidence": 0.49633306
+      }
+    }
+  ]
 }

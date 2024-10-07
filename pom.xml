@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-     Copyright 2021 Basis Technology Corp.
- 
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
- 
-         http://www.apache.org/licenses/LICENSE-2.0
- 
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This data and information is proprietary to, and a valuable trade secret
+  ~ of, Basis Technology Corp.  It is given in confidence by Basis Technology
+  ~ and may only be used as permitted under the license agreement under which
+  ~ it has been distributed, and in no other way.
+  ~
+  ~ Copyright (c) 2024 Basis Technology Corporation All rights reserved.
+  ~
+  ~ The technical data and information provided herein are provided with
+  ~ `limited rights', and the computer software provided herein is provided
+  ~ with `restricted rights' as those terms are defined in DAR and ASPR
+  ~ 7-104.9(a).
+  ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-parent</artifactId>
-    <version>7.17.0.1-SNAPSHOT</version>
+    <version>8.15.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
-        <artifactId>open-source-parent</artifactId>
         <groupId>com.basistech</groupId>
-        <version>9.0.1</version>
-        <relativePath />
+        <artifactId>textanalytics</artifactId>
+        <version>74.0.0</version>
     </parent>
+
     <inceptionYear>2017</inceptionYear>
     <url>http://rosette-api.github.io/rosette-elasticsearch-plugin</url>
     <scm>
@@ -41,18 +40,16 @@
         </site>
     </distributionManagement>
     <properties>
-        <jdk.version>1.8</jdk.version>
-        <bt.compile.source>${jdk.version}</bt.compile.source>
-        <bt.compile.target>${jdk.version}</bt.compile.target>
-        <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
-        <elasticsearch.version>7.17.0</elasticsearch.version>
-        <log4j.version>2.17.1</log4j.version>
-        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <elasticsearch.version>8.15.0</elasticsearch.version>
+        <log4j.version>2.23.1</log4j.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
+        <maven-javadoc-plugin.version>3.10.0</maven-javadoc-plugin.version>
         <!-- Use new server.  https://issues.sonatype.org/browse/OSSRH-76262 -->
         <nexus-staging-plugin-nexus-url>https://s01.oss.sonatype.org</nexus-staging-plugin-nexus-url>
-        <rosette.api.binding.version>1.20.0</rosette.api.binding.version>
     </properties>
     <modules>
         <module>plugin</module>
@@ -61,24 +58,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.basistech.rosette</groupId>
-                <artifactId>rosette-api</artifactId>
-                <version>${rosette.api.binding.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.elasticsearch</groupId>
                 <artifactId>elasticsearch</artifactId>
                 <version>${elasticsearch.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.elasticsearch.test</groupId>
@@ -98,33 +80,10 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-enforcer-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>enforce-maven</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>3.6.3</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <encoding>utf-8</encoding>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                    <debug>true</debug>
-                    <optimize>true</optimize>
+                    <release>${maven.compiler.target}</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -132,7 +91,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
-                    <source>${jdk.version}</source>
+                    <source>${maven.compiler.source}</source>
                     <quiet>true</quiet>
                 </configuration>
                 <executions>
@@ -209,7 +168,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
-                    <source>${jdk.version}</source>
+                    <source>${maven.compiler.source}</source>
                     <quiet>true</quiet>
                 </configuration>
                 <reportSets>

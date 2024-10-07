@@ -1,30 +1,34 @@
-/*
-* Copyright 2020 Basis Technology Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+/*******************************************************************************
+ * This data and information is proprietary to, and a valuable trade secret
+ * of, Basis Technology Corp.  It is given in confidence by Basis Technology
+ * and may only be used as permitted under the license agreement under which
+ * it has been distributed, and in no other way.
+ *
+ * Copyright (c) 2024 Basis Technology Corporation All rights reserved.
+ *
+ * The technical data and information provided herein are provided with
+ * `limited rights', and the computer software provided herein is provided
+ * with `restricted rights' as those terms are defined in DAR and ASPR
+ * 7-104.9(a).
+ *
+ ******************************************************************************/
 package com.rosette.elasticsearch;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.ingest.AbstractProcessor;
 import org.elasticsearch.ingest.IngestDocument;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 /**
  * Class that holds code shared by all Rosette ingest processors
  */
-public abstract class RosetteAbstractProcessor extends AbstractProcessor {
+public abstract class RosetteAbstractProcessor extends AbstractProcessor implements Closeable {
+    private static final Logger LOGGER = LogManager.getLogger("RosetteAbstractProcessor");
 
     protected String inputField;
     protected String targetField;
@@ -41,6 +45,14 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
     }
 
     @Override
+    public void close() throws IOException {
+        LOGGER.info("Closing Rosette API client");
+        if (rosAPI != null) {
+            rosAPI.close();
+        }
+    }
+
+    @Override
     public IngestDocument execute(IngestDocument ingestDocument) throws Exception {
         if (ingestDocument.hasField(targetField)) {
             throw new ElasticsearchException("Document already contains data in target field for this ingest "
@@ -52,17 +64,10 @@ public abstract class RosetteAbstractProcessor extends AbstractProcessor {
         }
 
         String inputText = ingestDocument.getFieldValue(inputField, String.class);
-
         if (Strings.isNullOrEmpty(inputText)) {
             //Do nothing
             return ingestDocument;
         }
-
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new SpecialPermission());
-        }
-
         processDocument(inputText, ingestDocument);
         return ingestDocument;
     }

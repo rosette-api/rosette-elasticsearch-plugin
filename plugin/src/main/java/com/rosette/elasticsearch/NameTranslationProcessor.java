@@ -1,50 +1,42 @@
-/*
-* Copyright 2017 Basis Technology Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+/*******************************************************************************
+ * This data and information is proprietary to, and a valuable trade secret
+ * of, Basis Technology Corp.  It is given in confidence by Basis Technology
+ * and may only be used as permitted under the license agreement under which
+ * it has been distributed, and in no other way.
+ *
+ * Copyright (c) 2024 Basis Technology Corporation All rights reserved.
+ *
+ * The technical data and information provided herein are provided with
+ * `limited rights', and the computer software provided herein is provided
+ * with `restricted rights' as those terms are defined in DAR and ASPR
+ * 7-104.9(a).
+ *
+ ******************************************************************************/
 package com.rosette.elasticsearch;
 
-import com.basistech.rosette.api.HttpRosetteAPIException;
-import com.basistech.rosette.api.common.AbstractRosetteAPI;
-import com.basistech.rosette.apimodel.NameTranslationRequest;
-import com.basistech.rosette.apimodel.NameTranslationResponse;
 import com.basistech.util.ISO15924;
 import com.basistech.util.LanguageCode;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Map;
 
 public class NameTranslationProcessor extends RosetteAbstractProcessor {
-
     public static final String TYPE = "ros_name_translation";
+    public static final String SERVICE_PATH = "name-translation";
+    private static final Logger LOGGER = LogManager.getLogger(TYPE);
 
-    private static final Logger LOGGER = Loggers
-            .getLogger(NameTranslationProcessor.class, NameTranslationProcessor.class.getName());
-
-    private LanguageCode targetLanguage;
-    private ISO15924 targetScript;
-    private String entityType;
-    private LanguageCode sourceLanguage;
-    private ISO15924 sourceScript;
-    private LanguageCode sourceOrigin;
+    private final LanguageCode targetLanguage;
+    private final ISO15924 targetScript;
+    private final String entityType;
+    private final LanguageCode sourceLanguage;
+    private final ISO15924 sourceScript;
+    private final LanguageCode sourceOrigin;
 
     NameTranslationProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField,
                              String targetField, LanguageCode targetLanguage, ISO15924 targetScript, String entityType,
@@ -59,34 +51,20 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
     }
 
     @Override
-    public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
+    public void processDocument(String inputText, IngestDocument ingestDocument) {
         // call /name-translation endpoint and set the result in the field
-        NameTranslationRequest request = NameTranslationRequest.builder()
-                .name(inputText)
-                .targetLanguage(targetLanguage)
-                .entityType(entityType)
-                .targetScript(targetScript)
-                .sourceLanguageOfUse(sourceLanguage)
-                .sourceLanguageOfOrigin(sourceOrigin)
-                .sourceScript(sourceScript).build();
-
-        NameTranslationResponse response;
         try {
-            // RosApi client binding's Jackson needs elevated privilege
-            response = AccessController.doPrivileged((PrivilegedAction<NameTranslationResponse>) () ->
-                    rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.NAME_TRANSLATION_SERVICE_PATH, request,
-                            NameTranslationResponse.class)
-            );
-        } catch (HttpRosetteAPIException ex) {
-            LOGGER.error(ex.getErrorResponse().getMessage());
-            throw new ElasticsearchException(ex.getErrorResponse().getMessage(), ex);
+            JsonNode resp = rosAPI.performNameTranslationRequest(SERVICE_PATH, inputText,
+                    targetLanguage, entityType, targetScript, sourceLanguage, sourceOrigin, sourceScript);
+            ingestDocument.setFieldValue(targetField, resp.get("translation").asText());
+        } catch (HttpClientException | HttpServerException ex) {
+            LOGGER.error(ex.getMessage());
+            throw new ElasticsearchException(ex.getMessage(), ex);
         }
-
-        ingestDocument.setFieldValue(targetField, response.getTranslation());
     }
 
     public static final class Factory implements Processor.Factory {
-        private RosetteApiWrapper rosAPI;
+        private final RosetteApiWrapper rosAPI;
 
         Factory(RosetteApiWrapper rosAPI) {
             this.rosAPI = rosAPI;
@@ -94,7 +72,7 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
 
         @Override
         public Processor create(Map<String, Processor.Factory> registry, String processorTag,
-                                String processorDescription, Map<String, Object> config) throws Exception {
+                                String processorDescription, Map<String, Object> config) {
 
             String inputField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config, "field");
             String targetField = ConfigurationUtils.readStringProperty(TYPE, processorTag, config,
@@ -132,8 +110,8 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
         SOURCE_SCRIPT("source_script", "Zyyy"),
         SOURCE_LANGUAGE_ORIGIN("source_language_of_origin", "xxx");
 
-        String name;
-        String defaultValue;
+        final String name;
+        final String defaultValue;
 
         Parameters(String name, String defaultValue) {
             this.name = name;

@@ -1,0 +1,16 @@
+version: '3'
+services:
+  elasticsearch:
+    image: elasticsearch:8.15.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ROSETTE_API_URL=http://alp.basistech.net:8181/rest/v1
+      - ROSETTE_API_KEY=e3bd6e93f63980813aaf1f848c3aa8a6
+    volumes:
+      - ${PWD}:/tmp/plugins
+      - ${PWD}/plugins:/usr/share/elasticsearch/plugins
+   

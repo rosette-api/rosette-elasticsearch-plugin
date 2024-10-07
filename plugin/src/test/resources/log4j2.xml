@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This data and information is proprietary to, and a valuable trade secret
   ~ of, Basis Technology Corp.  It is given in confidence by Basis Technology
@@ -14,26 +14,23 @@
   ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<assembly>
-    <id>plugin</id>
-    <formats>
-        <format>zip</format>
-    </formats>
-    <includeBaseDirectory>false</includeBaseDirectory>
-    <files>
-        <file>
-            <source>${project.basedir}/src/main/resources/plugin-descriptor.properties</source>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${project.basedir}/src/main/resources/plugin-security.policy</source>
-            <filtered>false</filtered>
-        </file>
-    </files>
-    <dependencySets>
-        <dependencySet>
-            <useProjectArtifact>true</useProjectArtifact>
-            <useTransitiveFiltering>false</useTransitiveFiltering>
-        </dependencySet>
-    </dependencySets>
-</assembly>
+<Configuration status="WARN">
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <!-- Root logger configuration -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+
+        <!-- Logger for your plugin classes -->
+        <Logger name="com.example.myplugin" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+</Configuration>

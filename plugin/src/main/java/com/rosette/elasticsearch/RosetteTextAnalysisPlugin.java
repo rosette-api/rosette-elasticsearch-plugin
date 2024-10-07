@@ -1,50 +1,61 @@
-/*
-* Copyright 2017 Basis Technology Corp.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+/*******************************************************************************
+ * This data and information is proprietary to, and a valuable trade secret
+ * of, Basis Technology Corp.  It is given in confidence by Basis Technology
+ * and may only be used as permitted under the license agreement under which
+ * it has been distributed, and in no other way.
+ *
+ * Copyright (c) 2024 Basis Technology Corporation All rights reserved.
+ *
+ * The technical data and information provided herein are provided with
+ * `limited rights', and the computer software provided herein is provided
+ * with `restricted rights' as those terms are defined in DAR and ASPR
+ * 7-104.9(a).
+ *
+ ******************************************************************************/
 package com.rosette.elasticsearch;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.settings.Setting;
 import org.elasticsearch.ingest.Processor;
 import org.elasticsearch.plugins.IngestPlugin;
 import org.elasticsearch.plugins.MapperPlugin;
 import org.elasticsearch.plugins.Plugin;
 
-public class RosetteTextAnalysisPlugin extends Plugin implements MapperPlugin, IngestPlugin {
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+public class RosetteTextAnalysisPlugin extends Plugin implements AutoCloseable, MapperPlugin, IngestPlugin {
     public static final Setting<String> ROSETTE_API_KEY =
             Setting.simpleString("ingest.rosette.api_key", Setting.Property.NodeScope, Setting.Property.Filtered);
     public static final Setting<String> ROSETTE_API_URL =
             Setting.simpleString("ingest.rosette.api_url", Setting.Property.NodeScope, Setting.Property.Filtered);
+    private static final Logger LOGGER = LogManager.getLogger("RosetteAnalysisPlugin");
+    private RosetteApiWrapper rosAPI;
 
     @Override
     public List<Setting<?>> getSettings() {
         return Arrays.asList(ROSETTE_API_KEY, ROSETTE_API_URL);
     }
-
+    @Override
+    public void close() throws IOException {
+        LOGGER.info("Closing Rosette API client");
+        if (rosAPI != null) {
+            rosAPI.close();
+        }
+    }
     @Override
     public Map<String, Processor.Factory> getProcessors(Processor.Parameters parameters) {
         String key = ROSETTE_API_KEY.get(parameters.env.settings());
         String altURL = ROSETTE_API_URL.get(parameters.env.settings());
         //As this method is called at Node startup, this should ensure only one instance of the api client
-        RosetteApiWrapper rosAPI = new RosetteApiWrapper(key, altURL);
-
+        if (rosAPI == null) {
+            LOGGER.info("Creating Rosette API client");
+            rosAPI = new RosetteApiWrapper(key, altURL);
+        }
         Map<String, Processor.Factory> processors = new HashMap<>();
         processors.put(LanguageProcessor.TYPE, new LanguageProcessor.Factory(rosAPI));
         processors.put(CategoriesProcessor.TYPE, new CategoriesProcessor.Factory(rosAPI));
