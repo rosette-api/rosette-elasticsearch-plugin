@@ -52,7 +52,7 @@ import java.util.Properties;
 //Configures and holds on to the shared Rosette API client
 public final class RosetteApiWrapper implements Closeable {
     private static final Logger LOGGER = LogManager.getLogger("RosetteApiWrapper");
-    private static final int MAX_CONNECTIONS = 50;
+    private static final int MAX_CONNECTIONS = 10;
     private static final int MAX_CONNECTIONS_PER_ROUTE = 10;
 
     private static final String DEFAULT_URL_BASE = "https://api.rosette.com/rest/v1";
@@ -128,6 +128,7 @@ public final class RosetteApiWrapper implements Closeable {
         closed = false;
     }
 
+
     @Override
     public void close() throws IOException {
         if (!closed && httpClient != null) {
@@ -168,7 +169,7 @@ public final class RosetteApiWrapper implements Closeable {
                     response.close();
                 }
             } catch (IOException e) {
-                LOGGER.error("Error while closing response", e);
+                LOGGER.error("Error while closing response and client", e);
             }
         }
     }
@@ -187,7 +188,7 @@ public final class RosetteApiWrapper implements Closeable {
         if (entityType != null) {
             bodyMap.put("entityType", entityType);
         }
-        if (sourceScript != null) {
+        if (sourceScript != null && sourceScript != ISO15924.Zyyy) {
             bodyMap.put("sourceScript", sourceScript.code4());
         }
         if (sourceLanguageOfUse != null) {
@@ -199,7 +200,7 @@ public final class RosetteApiWrapper implements Closeable {
         if (targetLanguage != null) {
             bodyMap.put("targetLanguage", targetLanguage.ISO639_3());
         }
-        if (targetScript != null) {
+        if (targetScript != null && sourceScript != ISO15924.Zyyy) {
             bodyMap.put("targetScript", targetScript.code4());
         }
         try (StringEntity payload =

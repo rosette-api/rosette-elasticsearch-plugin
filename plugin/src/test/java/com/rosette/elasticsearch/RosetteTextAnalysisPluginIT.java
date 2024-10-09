@@ -125,7 +125,6 @@ public class RosetteTextAnalysisPluginIT extends ESIntegTestCase {
 
     @Test
     public void testTranslateToEnglish() throws Exception {
-
         String inputText = "Владимир Путин";
         logger.info("Testing name translation processor, translating from Russian to English");
         GetResponse response = exerciseGetPipeline(inputText, "translate_eng");
