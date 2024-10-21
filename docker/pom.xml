@@ -81,8 +81,9 @@
                             <name>basistechnologycorporation/rosette-elasticsearch</name>
                             <build>
                                 <from>docker.elastic.co/elasticsearch/elasticsearch:${elasticsearch.version}</from>
+                                <noCache>true</noCache>
                                 <runCmds>
-                                    <run>find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
+                                  <run>find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
                                 </runCmds>
                                 <!-- Grap the plugin zip via dependencies -->
                                 <assembly>
@@ -106,7 +107,7 @@
                                         <method>GET</method>
                                         <status>200..399</status>
                                     </http>
-                                    <time>60000</time>
+                                    <time>90000</time>
                                 </wait>
                                 <!--ports>
                                     <port>${docker.port}:9200</port>
@@ -114,8 +115,7 @@
                                 <env>
                                     <ROSETTE_API_KEY>${env.ROSETTE_API_KEY}</ROSETTE_API_KEY>
                                     <discovery.type>single-node</discovery.type>
-                                    <!--network.host>_local_</network.host>
-                                    <http.host>0.0.0.0</http.host-->
+                                    <ES_JAVA_OPTS>-Xms4g -Xmx4g</ES_JAVA_OPTS>
                                     <xpack.security.enabled>false</xpack.security.enabled>
                                 </env>
                                 <ports>
@@ -123,7 +123,6 @@
                                 </ports>
                                 <log>
                                     <prefix>elasticsearch</prefix>
-                                    <file>${project.build.directory}/elasticsearch.log</file>
                                     <color>red</color>
                                 </log>
                             </run>
