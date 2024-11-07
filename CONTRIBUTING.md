@@ -8,7 +8,7 @@ Fork, then clone the repo:
 
 Set up your environment:
 
-- Java 8
+- Java 17
 - Maven
 - Get a [Rosette API key](https://developer.rosette.com/signup) if you don't have one
 - export ROSETTE_API_KEY="\<your key\>"

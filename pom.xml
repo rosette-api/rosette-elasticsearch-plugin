@@ -46,10 +46,9 @@
         <log4j.version>2.23.1</log4j.version>
         <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
         <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
-        <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>3.10.0</maven-javadoc-plugin.version>
-        <!-- Use new server.  https://issues.sonatype.org/browse/OSSRH-76262 -->
-        <nexus-staging-plugin-nexus-url>https://s01.oss.sonatype.org</nexus-staging-plugin-nexus-url>
+        <nexus-staging-plugin-nexus-url>https://issues.sonatype.org/browse/OSSRH-76262</nexus-staging-plugin-nexus-url>
     </properties>
     <modules>
         <module>plugin</module>
