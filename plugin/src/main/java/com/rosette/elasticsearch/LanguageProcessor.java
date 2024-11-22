@@ -14,7 +14,10 @@
  ******************************************************************************/
 package com.rosette.elasticsearch;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.basistech.rosette.api.HttpRosetteAPIException;
+import com.basistech.rosette.apimodel.DocumentRequest;
+import com.basistech.rosette.apimodel.LanguageOptions;
+import com.basistech.rosette.apimodel.LanguageResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
@@ -22,10 +25,12 @@ import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 
 public class LanguageProcessor extends RosetteAbstractProcessor {
-    public static final String LANGUAGE_SERVICE_PATH = "language";
+    public static final String LANGUAGE_SERVICE_PATH = "/language";
     public static final String TYPE = "ros_language";
     private static final Logger LOGGER = LogManager.getLogger(LanguageProcessor.class);
 
@@ -34,32 +39,29 @@ public class LanguageProcessor extends RosetteAbstractProcessor {
     }
 
     @Override
-    public void processDocument(String inputText, IngestDocument ingestDocument) {
-        boolean guessedLanguage = true;
+    public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
+        // call /language endpoint and set the result in the field
+        DocumentRequest<LanguageOptions> request = DocumentRequest.<LanguageOptions>builder()
+                .content(inputText).build();
+        LanguageResponse response;
         try {
-            JsonNode resp = rosAPI.performDocumentRequest(LANGUAGE_SERVICE_PATH, inputText, null);
-            JsonNode detections = resp.get("languageDetections");
-            if (detections != null) {
-                JsonNode detection = detections.get(0);
-                if (detection != null) {
-                    JsonNode language = detection.get("language");
-                    if (language != null) {
-                        ingestDocument.setFieldValue(targetField, language.asText());
-                    } else {
-                        guessedLanguage = false;
-                    }
-                } else {
-                    guessedLanguage = false;
-                }
-            } else {
-                guessedLanguage = false;
-            }
-            if (!guessedLanguage) {
-                throw new ElasticsearchException(TYPE + " ingest processor failed to guess language of document.");
-            }
-        } catch (HttpClientException | HttpServerException ex) {
-            LOGGER.error(ex.getMessage());
-            throw new ElasticsearchException(ex.getMessage(), ex);
+            // RosApi client binding's Jackson needs elevated privilege
+            response = AccessController.doPrivileged((PrivilegedAction<LanguageResponse>) () ->
+                    rosAPI.getHttpRosetteAPI().perform(LANGUAGE_SERVICE_PATH, request,
+                            LanguageResponse.class)
+            );
+        } catch (HttpRosetteAPIException ex) {
+            LOGGER.error(ex.getErrorResponse().getMessage());
+            throw new ElasticsearchException(ex.getErrorResponse().getMessage(), ex);
+        }
+
+        if (response.getLanguageDetections() != null
+                && !response.getLanguageDetections().isEmpty()
+                && response.getLanguageDetections().get(0) != null
+                && response.getLanguageDetections().get(0).getLanguage() != null) {
+            ingestDocument.setFieldValue(targetField, response.getLanguageDetections().get(0).getLanguage().ISO639_3());
+        } else {
+            throw new ElasticsearchException(TYPE + " ingest processor failed to guess language of document.");
         }
     }
 

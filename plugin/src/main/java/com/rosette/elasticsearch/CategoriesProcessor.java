@@ -15,20 +15,26 @@
 
 package com.rosette.elasticsearch;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.basistech.rosette.api.HttpRosetteAPIException;
+import com.basistech.rosette.apimodel.CategoriesOptions;
+import com.basistech.rosette.apimodel.CategoriesResponse;
+import com.basistech.rosette.apimodel.DocumentRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.common.Strings;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 
 public class CategoriesProcessor extends RosetteAbstractProcessor {
     public static final String TYPE = "ros_categories";
     private static final Logger LOGGER = LogManager.getLogger(CategoriesProcessor.class);
-    private static final String CATEGORIES_SERVICE_PATH = "categories";
+    private static final String CATEGORIES_SERVICE_PATH = "/categories";
 
     CategoriesProcessor(RosetteApiWrapper rosAPI, String tag, String description, String inputField,
                         String targetField) {
@@ -36,29 +42,33 @@ public class CategoriesProcessor extends RosetteAbstractProcessor {
     }
 
     @Override
-    public void processDocument(String inputText, IngestDocument ingestDocument) {
+    public void processDocument(String inputText, IngestDocument ingestDocument) throws ElasticsearchException {
         // call /categories endpoint and set the top result in the field
+        DocumentRequest<CategoriesOptions> request = DocumentRequest.<CategoriesOptions>builder()
+                .content(inputText).build();
+        CategoriesResponse response;
         try {
-            JsonNode resp = rosAPI.performDocumentRequest(CATEGORIES_SERVICE_PATH, inputText, null);
-            JsonNode categories = resp.get("categories");
-            if (categories != null) {
-                JsonNode category = categories.get(0);
-                if (category != null) {
-                    ingestDocument.setFieldValue(targetField, category.get("label").asText());
-                } else {
-                    throw new ElasticsearchException(TYPE + " ingest processor failed to categorize document.");
-                }
-            } else {
-                throw new ElasticsearchException(TYPE + " ingest processor failed to categorize document.");
-            }
-        } catch (HttpClientException | HttpServerException ex) {
-            LOGGER.error(ex.getMessage());
-            throw new ElasticsearchException(ex.getMessage(), ex);
+            // RosApi client binding's Jackson needs elevated privilege
+            response = AccessController.doPrivileged((PrivilegedAction<CategoriesResponse>) () ->
+                    rosAPI.getHttpRosetteAPI().perform(CATEGORIES_SERVICE_PATH, request, CategoriesResponse.class)
+            );
+        } catch (HttpRosetteAPIException ex) {
+            LOGGER.error(ex.getErrorResponse().getMessage());
+            throw new ElasticsearchException(ex.getErrorResponse().getMessage(), ex);
+        }
+
+        if (response.getCategories() != null
+                && !response.getCategories().isEmpty()
+                && response.getCategories().get(0) != null
+                && !Strings.isNullOrEmpty(response.getCategories().get(0).getLabel())) {
+            ingestDocument.setFieldValue(targetField, response.getCategories().get(0).getLabel());
+        } else {
+            throw new ElasticsearchException(TYPE + " ingest processor failed to categorize document.");
         }
     }
 
     public static final class Factory implements Processor.Factory {
-        private final RosetteApiWrapper rosAPI;
+        private RosetteApiWrapper rosAPI;
 
         Factory(RosetteApiWrapper rosAPI) {
             this.rosAPI = rosAPI;

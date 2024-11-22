@@ -14,15 +14,23 @@
  ******************************************************************************/
 package com.rosette.elasticsearch;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.basistech.rosette.api.HttpRosetteAPIException;
+import com.basistech.rosette.apimodel.DocumentRequest;
+import com.basistech.rosette.apimodel.SentimentOptions;
+import com.basistech.rosette.apimodel.SentimentResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.common.Strings;
 import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
+
+import static com.basistech.rosette.api.common.AbstractRosetteAPI.SENTIMENT_SERVICE_PATH;
 
 public class SentimentProcessor extends RosetteAbstractProcessor {
     public static final String TYPE = "ros_sentiment";
@@ -35,25 +43,27 @@ public class SentimentProcessor extends RosetteAbstractProcessor {
     }
 
     @Override
-    public void processDocument(String inputText, IngestDocument ingestDocument) {
+    public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /sentiment endpoint and set the top result in the field
+        DocumentRequest<SentimentOptions> request = DocumentRequest.<SentimentOptions>builder()
+                .content(inputText).build();
+        SentimentResponse response;
         try {
-            JsonNode resp = rosAPI.performDocumentRequest(SERVICE_PATH, inputText, null);
-            JsonNode document = resp.get("document");
-            if (document != null) {
-                JsonNode label = document.get("label");
-                if (label != null) {
-                    ingestDocument.setFieldValue(targetField, label.asText());
-                } else {
-                    throw new ElasticsearchException(TYPE
-                            + " ingest processor failed to determine sentiment of document.");
-                }
-            } else {
-                throw new ElasticsearchException(TYPE + " ingest processor failed to determine sentiment of document.");
-            }
-        } catch (HttpClientException | HttpServerException ex) {
-            LOGGER.error(ex.getMessage());
-            throw new ElasticsearchException(ex.getMessage(), ex);
+            // RosApi client binding's Jackson needs elevated privilege
+            response = AccessController.doPrivileged((PrivilegedAction<SentimentResponse>) () ->
+                    rosAPI.getHttpRosetteAPI().perform(SENTIMENT_SERVICE_PATH, request,
+                            SentimentResponse.class)
+            );
+        } catch (HttpRosetteAPIException ex) {
+            LOGGER.error(ex.getErrorResponse().getMessage());
+            throw new ElasticsearchException(ex.getErrorResponse().getMessage(), ex);
+        }
+
+        if (response.getDocument() != null
+                && !Strings.isNullOrEmpty(response.getDocument().getLabel())) {
+            ingestDocument.setFieldValue(targetField, response.getDocument().getLabel());
+        } else {
+            throw new ElasticsearchException(TYPE + " ingest processor failed to determine sentiment of document.");
         }
     }
 

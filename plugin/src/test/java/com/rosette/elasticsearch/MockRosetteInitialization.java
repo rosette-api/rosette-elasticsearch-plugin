@@ -35,6 +35,22 @@ public class MockRosetteInitialization implements PluginExpectationInitializer {
     public void initializeExpectations(MockServerClient mockServerClient) {
         String baseURL = System.getProperty("mockserver.baseurl", "/rest/worker/v1/");
 
+        try (InputStream is = getClass().getClassLoader()
+                .getResourceAsStream("mock_responses/sentiment_adm_response.json")) {
+            String response = getStringFromResource(is);
+            mockServerClient.when(HttpRequest.request()
+                            .withMethod("POST")
+                            .withPath(baseURL + "sentiment")
+                            .withQueryStringParameter("output", "rosette"))
+                    .respond(HttpResponse.response()
+                            .withStatusCode(200)
+                            .withHeaders(
+                                    new Header(HttpHeaders.CONTENT_TYPE, "application/json")
+                            )
+                            .withBody(response));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         addEndpoint(baseURL, "categories", mockServerClient);
         addEndpoint(baseURL, "sentiment", mockServerClient);
         addEndpoint(baseURL, "language", mockServerClient);

@@ -58,15 +58,14 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>com.basistech.rosette</groupId>
+            <artifactId>rosette-api-all</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j-ext.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -77,11 +76,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${jackson-annotations.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.basistech.rosette</groupId>
-            <artifactId>rosette-api-common</artifactId>
-            <version>${rosette.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -289,6 +283,10 @@
             <artifactId>joda-time</artifactId>
             <version>${joda-time.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
         </dependency>
     </dependencies>
     <build>

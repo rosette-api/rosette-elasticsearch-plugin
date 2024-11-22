@@ -36,6 +36,24 @@
         }
       ]
     },
+    "sentimentResults": {
+      "type": "list",
+      "itemType": "categorizerResults",
+      "items": [
+        {
+          "label": "pos",
+          "score": 0.62341258,
+          "confidence": 0.7962072,
+          "explanationSet": [
+            "pleased",
+            "hollywood",
+            "wrote",
+            "*POS_LEX*",
+            "new"
+          ]
+        }
+      ]
+    },
     "layoutRegion": {
       "type": "list",
       "itemType": "layoutRegion",
@@ -1076,7 +1094,21 @@
           ],
           "headMentionIndex": 0,
           "type": "PERSON",
-          "entityId": "T0"
+          "entityId": "T0",
+          "sentiment": [
+            {
+              "label": "pos",
+              "score": 0.45598659,
+              "confidence": 0.70096395,
+              "explanationSet": [
+                "hollywood",
+                "wrote",
+                "*POS_LEX*",
+                "film",
+                "delighted"
+              ]
+            }
+          ]
         },
         {
           "mentions": [
@@ -1091,15 +1123,29 @@
           ],
           "headMentionIndex": 0,
           "type": "PRODUCT",
-          "entityId": "Q61503"
+          "entityId": "Q61503",
+          "sentiment": [
+            {
+              "label": "pos",
+              "score": -0.1097166,
+              "confidence": 0.49633306,
+              "explanationSet": [
+                "*POS_LEX*",
+                "new",
+                "delighted",
+                "family"
+              ]
+            }
+          ]
         }
       ]
     }
   },
   "documentMetadata": {
     "processedBy": [
-      "language-identification@10.70.77.33",
-      "entity-extraction@10.70.77.33"
+      "language-identification@10.70.77.158",
+      "entity-extraction@10.70.77.158",
+      "sentiment@10.70.77.158"
     ]
   }
 }

@@ -14,9 +14,12 @@
  ******************************************************************************/
 package com.rosette.elasticsearch;
 
+import com.basistech.rosette.api.HttpRosetteAPIException;
+import com.basistech.rosette.api.common.AbstractRosetteAPI;
+import com.basistech.rosette.apimodel.NameTranslationRequest;
+import com.basistech.rosette.apimodel.NameTranslationResponse;
 import com.basistech.util.ISO15924;
 import com.basistech.util.LanguageCode;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
@@ -24,6 +27,8 @@ import org.elasticsearch.ingest.ConfigurationUtils;
 import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Processor;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 
 public class NameTranslationProcessor extends RosetteAbstractProcessor {
@@ -51,16 +56,30 @@ public class NameTranslationProcessor extends RosetteAbstractProcessor {
     }
 
     @Override
-    public void processDocument(String inputText, IngestDocument ingestDocument) {
+    public void processDocument(String inputText, IngestDocument ingestDocument) throws Exception {
         // call /name-translation endpoint and set the result in the field
+        NameTranslationRequest request = NameTranslationRequest.builder()
+                .name(inputText)
+                .targetLanguage(targetLanguage)
+                .entityType(entityType)
+                .targetScript(targetScript)
+                .sourceLanguageOfUse(sourceLanguage)
+                .sourceLanguageOfOrigin(sourceOrigin)
+                .sourceScript(sourceScript).build();
+
+        NameTranslationResponse response;
         try {
-            JsonNode resp = rosAPI.performNameTranslationRequest(SERVICE_PATH, inputText,
-                    targetLanguage, entityType, targetScript, sourceLanguage, sourceOrigin, sourceScript);
-            ingestDocument.setFieldValue(targetField, resp.get("translation").asText());
-        } catch (HttpClientException | HttpServerException ex) {
-            LOGGER.error(ex.getMessage());
-            throw new ElasticsearchException(ex.getMessage(), ex);
+            // RosApi client binding's Jackson needs elevated privilege
+            response = AccessController.doPrivileged((PrivilegedAction<NameTranslationResponse>) () ->
+                    rosAPI.getHttpRosetteAPI().perform(AbstractRosetteAPI.NAME_TRANSLATION_SERVICE_PATH, request,
+                            NameTranslationResponse.class)
+            );
+        } catch (HttpRosetteAPIException ex) {
+            LOGGER.error(ex.getErrorResponse().getMessage());
+            throw new ElasticsearchException(ex.getErrorResponse().getMessage(), ex);
         }
+
+        ingestDocument.setFieldValue(targetField, response.getTranslation());
     }
 
     public static final class Factory implements Processor.Factory {
