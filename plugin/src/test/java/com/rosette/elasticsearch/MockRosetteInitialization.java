@@ -35,22 +35,13 @@ public class MockRosetteInitialization implements PluginExpectationInitializer {
     public void initializeExpectations(MockServerClient mockServerClient) {
         String baseURL = System.getProperty("mockserver.baseurl", "/rest/worker/v1/");
 
-        try (InputStream is = getClass().getClassLoader()
-                .getResourceAsStream("mock_responses/sentiment_adm_response.json")) {
-            String response = getStringFromResource(is);
-            mockServerClient.when(HttpRequest.request()
-                            .withMethod("POST")
-                            .withPath(baseURL + "sentiment")
-                            .withQueryStringParameter("output", "rosette"))
-                    .respond(HttpResponse.response()
-                            .withStatusCode(200)
-                            .withHeaders(
-                                    new Header(HttpHeaders.CONTENT_TYPE, "application/json")
-                            )
-                            .withBody(response));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        //sentiment needs an ADM response when requested through entities
+        HttpRequest sentimentADMReq = HttpRequest.request()
+                .withMethod("POST")
+                .withPath(baseURL + "sentiment")
+                .withQueryStringParameter("output", "rosette");
+
+        addEndpoint(mockServerClient, "mock_responses/sentiment_adm_response.json", sentimentADMReq);
         addEndpoint(baseURL, "categories", mockServerClient);
         addEndpoint(baseURL, "sentiment", mockServerClient);
         addEndpoint(baseURL, "language", mockServerClient);
@@ -59,12 +50,18 @@ public class MockRosetteInitialization implements PluginExpectationInitializer {
     }
 
     private void addEndpoint(String baseURL, String endpointName, MockServerClient mockServerClient) {
+        addEndpoint(mockServerClient, "mock_responses/" + endpointName + "_response.json",
+                HttpRequest.request()
+                .withMethod("POST")
+                .withPath(baseURL + endpointName)
+        );
+    }
+
+    private void addEndpoint(MockServerClient mockServerClient, String responseFile, HttpRequest req) {
         try (InputStream is = getClass().getClassLoader()
-                .getResourceAsStream("mock_responses/" + endpointName + "_response.json")) {
+                .getResourceAsStream(responseFile)) {
             String response = getStringFromResource(is);
-            mockServerClient.when(HttpRequest.request()
-                    .withMethod("POST")
-                    .withPath(baseURL + endpointName))
+            mockServerClient.when(req)
                     .respond(HttpResponse.response()
                             .withStatusCode(200)
                             .withHeaders(
