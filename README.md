@@ -36,7 +36,7 @@ There are two common ways to install the plugin into Elasticsearch. (Make sure t
 #### Note on Versioning:
 The plugin uses semantic versioning. The first three numbers describe which version of Elasticsearch this version of the plugin is compatible with, and the last number indicates the version of the plugin within that Elasticsearch version.
 
-For instance, `5.3.0.1` is the second patch version of the plugin for Elasticsearch 5.3.0.
+For instance, `8.15.0.1` is the second patch version of the plugin for Elasticsearch 8.15.0.
 
 ## How to Build
 Building the plugin requires a Rosette API key. If you don’t already have a Rosette API developer account, head over to [developer.rosette.com](https://developer.rosette.com/signup) to get your free Rosette API key.

@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-     Copyright 2021 Basis Technology Corp.
- 
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
- 
-         http://www.apache.org/licenses/LICENSE-2.0
- 
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This data and information is proprietary to, and a valuable trade secret
+  ~ of, Basis Technology Corp.  It is given in confidence by Basis Technology
+  ~ and may only be used as permitted under the license agreement under which
+  ~ it has been distributed, and in no other way.
+  ~
+  ~ Copyright (c) 2024 Basis Technology Corporation All rights reserved.
+  ~
+  ~ The technical data and information provided herein are provided with
+  ~ `limited rights', and the computer software provided herein is provided
+  ~ with `restricted rights' as those terms are defined in DAR and ASPR
+  ~ 7-104.9(a).
+  ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.rosette.elasticsearch</groupId>
     <artifactId>rosette-elasticsearch-docker</artifactId>
     <packaging>pom</packaging>
     <parent>
         <artifactId>rosette-elasticsearch-parent</artifactId>
         <groupId>com.rosette.elasticsearch</groupId>
-        <version>7.17.0.1-SNAPSHOT</version>
+        <version>8.15.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <dependencies>
@@ -35,11 +33,41 @@
     </dependencies>
     <properties>
         <curl.output>${project.build.directory}/curl-output.txt</curl.output>
-        <docker-maven-plugin.version>0.36.0</docker-maven-plugin.version>
+        <docker-maven-plugin.version>0.45.0</docker-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
     </properties>
     <build>
         <defaultGoal>verify</defaultGoal>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>get-local-ip</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>local-ip</goal>
+                        </goals>
+                        <configuration>
+                            <localIpProperty>elastic.ip</localIpProperty>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>get-random-port</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>server.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
@@ -53,8 +81,9 @@
                             <name>basistechnologycorporation/rosette-elasticsearch</name>
                             <build>
                                 <from>docker.elastic.co/elasticsearch/elasticsearch:${elasticsearch.version}</from>
+                                <noCache>true</noCache>
                                 <runCmds>
-                                    <run>find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
+                                  <run>find /plugins -name "*.zip" -exec /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file://{} \;</run>
                                 </runCmds>
                                 <!-- Grap the plugin zip via dependencies -->
                                 <assembly>
@@ -74,21 +103,28 @@
                             <run>
                                 <wait>
                                     <http>
-                                        <url>http://${host.ip}:${docker.port}</url>
+                                        <url>http://localhost:${server.port}</url>
                                         <method>GET</method>
                                         <status>200..399</status>
                                     </http>
-                                    <time>60000</time>
+                                    <time>90000</time>
                                 </wait>
-                                <ports>
+                                <!--ports>
                                     <port>${docker.port}:9200</port>
-                                </ports>
+                                </ports-->
                                 <env>
                                     <ROSETTE_API_KEY>${env.ROSETTE_API_KEY}</ROSETTE_API_KEY>
-                                    <network.host>_local_</network.host>
-                                    <http.host>0.0.0.0</http.host>
+                                    <discovery.type>single-node</discovery.type>
+                                    <ES_JAVA_OPTS>-Xms4g -Xmx4g</ES_JAVA_OPTS>
                                     <xpack.security.enabled>false</xpack.security.enabled>
                                 </env>
+                                <ports>
+                                    <port>${server.port}:9200</port>
+                                </ports>
+                                <log>
+                                    <prefix>elasticsearch</prefix>
+                                    <color>red</color>
+                                </log>
                             </run>
                         </image>
                     </images>
@@ -116,30 +152,15 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                   <execution>
-                    <id>run_IT</id>
+                    <id>Run Integration Test</id>
                     <goals>
                       <goal>exec</goal>
                     </goals>
                     <phase>integration-test</phase>
                     <configuration>
-                      <executable>./test.sh</executable>
+                      <executable>${project.basedir}/test.sh</executable>
                       <arguments>
-                          <argument>${host.ip}</argument>
-                          <argument>${docker.port}</argument>
-                      </arguments>
-                      <outputFile>${curl.output}</outputFile>
-                    </configuration>
-                  </execution>
-                  <execution>
-                    <id>verify_IT_success</id>
-                    <goals>
-                      <goal>exec</goal>
-                    </goals>
-                    <phase>verify</phase>
-                    <configuration>
-                      <executable>./verify.sh</executable>
-                      <arguments>
-                          <argument>${curl.output}</argument>
+                          <argument>http://${elastic.ip}:${server.port}</argument>
                       </arguments>
                     </configuration>
                   </execution>
@@ -147,68 +168,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>set-url-localhost</id>
-            <activation>
-                <property>
-                    <name>!env.DOCKER_HOST</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>${build-helper-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>get-local-ip</id>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>local-ip</goal>
-                                </goals>
-                                <configuration>
-                                    <localIpProperty>host.ip</localIpProperty>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>set-url-from-docker-host</id>
-            <activation>
-                <property>
-                    <name>env.DOCKER_HOST</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>${build-helper-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <phase>validate</phase>
-                                <id>regex-property</id>
-                                <goals>
-                                    <goal>regex-property</goal>
-                                </goals>
-                                <configuration>
-                                    <name>host.ip</name>
-                                    <value>${env.DOCKER_HOST}</value>
-                                    <regex>^tcp://(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3}):\d{1,5}$</regex>
-                                    <replacement>$1.$2.$3.$4</replacement>
-                                    <failIfNoMatch>true</failIfNoMatch>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

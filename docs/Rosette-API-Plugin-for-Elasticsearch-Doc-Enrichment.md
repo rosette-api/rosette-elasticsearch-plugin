@@ -18,7 +18,7 @@ See [Rosette’s Elasticsearch Plugins](https://www.rosette.com/elastic/) or con
 Rosette functionality is called through an ingest node of Elasticsearch that pre-processes documents before indexing takes place. You define a pipeline that specifies the series of processors that transforms or enriches the document. See the [Ingest APIs of Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/master/ingest-apis.html) for more about how to create, add, or delete pipelines.
 ### Version Compatibility
 The plugin uses semantic versioning. The first three numbers indicate the version of Elasticsearch that the plugin is compatible with, and the last number indicates the version of the plugin within that Elasticsearch version.
-For example, 5.3.1.1 is the second patch version of the plugin for Elasticsearch 5.3.1.
+For example, 8.15.0.1 is the second patch version of the plugin for Elasticsearch 8.15.0.
 
 ### Installation
 1. Install Elasticsearch
