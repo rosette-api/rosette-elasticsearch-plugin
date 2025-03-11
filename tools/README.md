@@ -8,7 +8,7 @@ To release you need:
 - credentials for the above added to your maven settings file
 - personal OAuth access token with full repo permissions
 
-The process for this is described [here](https://git.basistech.net/raas/rosapi1.5/blob/master/doc/release-binding.md#request-access-to-ossrh-if-not-already-done).
+The process for this is described [here](https://github.com/RosetteTextAnalytics/rosapi1.5/blob/master/doc/release-binding.md#request-access-to-ossrh-if-not-already-done).
 
 ## Releasing
 
